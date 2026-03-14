@@ -140,10 +140,10 @@ input:checked+.slider:before {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('useredit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('usershow') }}" class="btn btn-sm btn-info text-white" title="View">
+                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
@@ -166,10 +166,10 @@ input:checked+.slider:before {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('useredit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('usershow') }}" class="btn btn-sm btn-info text-white" title="View">
+                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>

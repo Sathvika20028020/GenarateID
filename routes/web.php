@@ -74,7 +74,7 @@ Route::get('/usersedit', function () {
     return view('admin.users.edit'); 
 })->name('usersedit');
 
-Route::get('/usershow', function () {
+Route::get('/usersshow', function () {
     return view('admin.users.show'); 
 })->name('usersshow');
 
