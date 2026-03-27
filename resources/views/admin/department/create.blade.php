@@ -100,10 +100,11 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="departmentForm" class="needs-validation" novalidate>
+            <form id="departmentForm" class="needs-validation" novalidate action="{{ route('department.store') }}" method="post">
+                @csrf
                 <div class="mb-3">
                     <label class="form-label">Department Name<span class="text-danger">*</span> </label>
-                    <input type="text" class="form-control" placeholder="Enter Department Name" required>
+                    <input type="text" class="form-control" name="name" placeholder="Enter Department Name" required>
                     <div class="invalid-feedback">
                         Please enter Department name.
                     </div>
@@ -127,24 +128,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("departmentForm");
 
     form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
 
         // Success SweetAlert
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Department added successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
+        // Swal.fire({
+        //     icon: "success",
+        //     title: "Success!",
+        //     text: "Department added successfully!",
+        //     confirmButtonColor: "#ff6a88"
+        // }).then(() => {
+        //     form.reset();
+        //     form.classList.remove("was-validated");
+        // });
 
     });
 

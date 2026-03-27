@@ -47,48 +47,48 @@
                         <ul class="sidebar-submenu">
 
                             <li>
-                                <a class="{{ request()->routeIs('departmentlist') ? 'active' : '' }}"
-                                    href="{{ route('departmentlist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('department.index') ? 'active' : '' }}"
+                                    href="{{ route('department.index') }}">
                                     <i class="bi bi-diagram-3-fill me-2"></i> Department
                                 </a>
                             </li>
                             <li>
-                               <a class="{{ request()->routeIs('departmentlist') ? 'active' : '' }}"
-   href="{{ route('departmentlist') }}">
-   <i class="bi bi-geo-alt-fill me-2"></i> Constituency
-</a>
+                               <a class="sidebar-link {{ request()->routeIs('constituency.index') ? 'active' : '' }}"
+                                  href="{{ route('constituency.index') }}">
+                                  <i class="bi bi-geo-alt-fill me-2"></i> Constituency
+                                </a>
                             </li>
 
                             <li>
-                                <a class="{{ request()->routeIs('corporationlist') ? 'active' : '' }}"
-                                    href="{{ route('corporationlist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('corporation.index') ? 'active' : '' }}"
+                                    href="{{ route('corporation.index') }}">
                                     <i class="bi bi-building me-2"></i> Corporation
                                 </a>
                             </li>
 
                             <li>
-                                <a class="{{ request()->routeIs('designationlist') ? 'active' : '' }}" href="{{ route('designationlist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('designation.index') ? 'active' : '' }}" href="{{ route('designation.index') }}">
                                     <i class="bi bi-person-workspace me-2"></i> Designation
                                 </a>
                             </li>
 
                             <li>
-                                <a class="{{ request()->routeIs('wardlist') ? 'active' : '' }}"
-                                    href="{{ route('wardlist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('ward.index') ? 'active' : '' }}"
+                                    href="{{ route('ward.index') }}">
                                     <i class="bi bi-map me-2"></i> Wards
                                 </a>
                             </li>
 
                             <li>
-                                <a class="{{ request()->routeIs('zonelist') ? 'active' : '' }}"
-                                    href="{{ route('zonelist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('zone.index') ? 'active' : '' }}"
+                                    href="{{ route('zone.index') }}">
                                     <i class="bi bi-globe2 me-2"></i> Zones
                                 </a>
                             </li>
 
                             <li>
-                                <a class="{{ request()->routeIs('userslist') ? 'active' : '' }}"
-                                    href="{{ route('userslist') }}">
+                                <a class="sidebar-link {{ request()->routeIs('user.index') ? 'active' : '' }}"
+                                    href="{{ route('user.index') }}">
                                     <i class="bi bi-people-fill me-2"></i> Users
                                 </a>
                             </li>

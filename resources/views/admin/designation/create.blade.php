@@ -100,19 +100,18 @@
     <div class="container mt-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <form id="DesignationForm" class="needs-validation" novalidate>
-
+                <form id="DesignationForm" class="needs-validation" novalidate action="{{ route('designation.store') }}" method="post">
+                    @csrf
                     <div class="row">
 
                         <!-- Department -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Department<span class="text-danger">*</span> </label>
-                            <select class="form-select" required>
+                            <select class="form-select" required name="department_id">
                                 <option value="">Select Department</option>
-                                <option>HR</option>
-                                <option>IT</option>
-                                <option>Admin</option>
-                                <option>Finance</option>
+                                @foreach($departments as $department)
+                                <option value="{{$department->id}}">{{$department->name}}</option>
+                                @endforeach
                             </select>
                             <div class="invalid-feedback">
                                 Please select department.
@@ -122,7 +121,7 @@
                         <!-- Designation Name -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Designation<span class="text-danger">*</span> </label>
-                            <input type="text" class="form-control" placeholder="Enter Designation" required>
+                            <input type="text" class="form-control" name="name" placeholder="Enter Designation" required>
                             <div class="invalid-feedback">
                                 Please enter designation.
                             </div>
@@ -153,23 +152,12 @@
 
             form.addEventListener('submit', function (event) {
 
-                event.preventDefault();
-
                 if (!form.checkValidity()) {
+                  event.preventDefault();
                     event.stopPropagation();
                     form.classList.add('was-validated');
                     return;
                 }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Designation added successfully',
-                    confirmButtonColor: '#ff6a88'
-                }).then(() => {
-                    form.reset();
-                    form.classList.remove('was-validated');
-                });
 
             }, false);
 

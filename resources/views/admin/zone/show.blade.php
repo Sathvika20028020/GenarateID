@@ -46,26 +46,22 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <h4 class="mb-4">Ward Details</h4>
+            <h4 class="mb-4">Zone Details</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <th style="width: 30%;">Ward ID</th>
-                            <td>1</td>
-                        </tr>
-                        <tr>
                             <th>Zone Name</th>
-                            <td>Zone 1</td>
+                            <td>{{$zone->name}}</td>
                         </tr>
                         <tr>
                             <th>Corporation</th>
-                            <td>Corporation 1</td>
+                            <td>{{$zone->corporation?->name}}</td>
                         </tr>
                         <tr>
                             <th>Status</th>
                             <td>
-                                <span class="badge bg-success">Active</span>
+                                <span class="badge bg-{{$zone->status ? 'success' : 'danger'}}">{{$zone->status ? 'Active' : 'Inactive'}}</span>
                             </td>
                         </tr>
                         <!-- <tr>

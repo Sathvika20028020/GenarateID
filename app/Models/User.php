@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Ward;
 
 class User extends Authenticatable
 {
@@ -19,8 +20,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'name_kn',
+        'phone',
+        'status',
+        'ward_ids',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -45,4 +51,28 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getWardNamesAttribute()
+    {
+        if (!$this->ward_ids) {
+            return [];
+        }
+
+        $ids = explode(',', $this->ward_ids);
+
+        return Ward::whereIn('id', $ids)
+            ->pluck('name')
+            ->implode(', ');
+            // ->toArray();
+    }
+
+    public function getWardsAttribute()
+    {
+        if (!$this->ward_ids) {
+            return [];
+        }
+
+        return explode(',', $this->ward_ids);
+    }
+
 }

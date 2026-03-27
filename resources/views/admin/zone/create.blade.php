@@ -100,12 +100,13 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="zoneForm" class="needs-validation" novalidate>
+            <form id="zoneForm" class="needs-validation" novalidate action="{{ route('zone.store') }}" method="post">
+                          @csrf
                 <div class="row g-3">
                     <!-- Zone Name -->
                     <div class="col-md-6">
                         <label class="form-label">Zone Name<span class="text-danger">*</span> </label>
-                        <input type="text" class="form-control" placeholder="Enter Zone Name" required>
+                        <input type="text" class="form-control" name="name" placeholder="Enter Zone Name" required>
                         <div class="invalid-feedback">
                             Please enter zone name.
                         </div>
@@ -113,11 +114,11 @@ input:checked+.slider:before {
                     <!-- Corporation Dropdown -->
                     <div class="col-md-6">
                         <label class="form-label">Corporation Name<span class="text-danger">*</span> </label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="corporation_id" required>
                             <option value="">Select Corporation</option>
-                            <option>Corporation 1</option>
-                            <option>Corporation 2</option>
-                            <option>Corporation 3</option>
+                                  @foreach($corporations as $corporation)
+                                  <option value="{{$corporation->id}}">{{$corporation->name}}</option>
+                                  @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select corporation.
@@ -144,23 +145,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("zoneForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
-
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Zone added successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
 
     });
 

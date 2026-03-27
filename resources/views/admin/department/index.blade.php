@@ -103,7 +103,7 @@ input:checked + .slider:before {
                         <h4 class="mb-0 add"></h4>
                         <div class="d-flex gap-2">
 
-                            <a href="{{ route('departmentcreate') }}" class="btn btn-primary">
+                            <a href="{{ route('department.create') }}" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Add
                             </a>
@@ -122,53 +122,31 @@ input:checked + .slider:before {
                                 </tr>
                             </thead>
                             <tbody>
+                              @foreach($entries as $entry)
                                 <tr>
-                                    <td>01</td>
-                                    <td>BSWML</td>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$entry->name}}</td>
 
 
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" {{$entry->status ? 'checked' : ''}}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('departmentedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('department.edit', $entry->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('departmentshow') }}" class="btn btn-sm btn-info text-white"
+                                            <a href="{{ route('department.show', $entry->id) }}" class="btn btn-sm btn-info text-white"
                                                 title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>BSWML</td>
-
-
-
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('departmentedit') }}" class="btn btn-sm btn-primary" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a href="{{ route('departmentshow') }}" class="btn btn-sm btn-info text-white"
-                                                title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                              @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -180,4 +158,15 @@ input:checked + .slider:before {
 @endsection
 
 @section('script')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+  @if(session()->has('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+ </script>
 @endsection

@@ -102,12 +102,13 @@ input:checked+.slider:before {
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <form>
+                    <form class="needs-validation" novalidate="" id="editDeptForm" action="{{ route('designation.update', $designation->id) }}" method="post">
+                        @csrf @method('put')
 
                         <!-- Designation Name -->
                         <div class="mb-3">
                             <label class="form-label">Designation Name</label>
-                            <input type="text" id="designation_name" class="form-control" value="Deputy"
+                            <input type="text" id="designation_name" name="name" class="form-control" value="{{$designation->name}}"
                                 placeholder="Enter Designation Name" required>
                         </div>
 
@@ -116,7 +117,7 @@ input:checked+.slider:before {
                             <label class="form-label">Status</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" id="status" checked>
+                                <input type="checkbox" id="status" value="1" name="status" {{$designation->status ? 'checked' : ''}}>
                                 <span class="slider"></span>
                             </label>
                         </div>
@@ -142,24 +143,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("departmentForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
-
-        // Success SweetAlert
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Department added successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
 
     });
 

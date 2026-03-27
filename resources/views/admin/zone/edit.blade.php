@@ -100,12 +100,13 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="zoneForm" class="needs-validation" novalidate>
+            <form id="zoneForm" class="needs-validation" novalidate action="{{ route('zone.update', $zone->id) }}" method="post">
+                          @csrf @method('put')
                 <div class="row g-3">
                     <!-- Ward / Zone Name -->
                     <div class="col-md-6">
                         <label class="form-label">Zone Name</label>
-                        <input type="text" class="form-control" value="Zone 1" placeholder="Enter Zone Name" required>
+                        <input type="text" class="form-control" value="{{$zone->name}}" name="name" placeholder="Enter Zone Name" required>
                         <div class="invalid-feedback">
                             Please enter zone name.
                         </div>
@@ -113,11 +114,11 @@ input:checked+.slider:before {
                     <!-- Corporation Dropdown -->
                     <div class="col-md-6">
                         <label class="form-label">Corporation Name</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="corporation_id" required>
                             <option value="">Select Corporation</option>
-                            <option selected>Corporation 1</option>
-                            <option>Corporation 2</option>
-                            <option>Corporation 3</option>
+                                  @foreach($corporations as $corporation)
+                                  <option value="{{$corporation->id}}" {{$corporation->id == $zone->corporation_id ? 'selected' : ''}}>{{$corporation->name}}</option>
+                                  @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select corporation.
@@ -144,24 +145,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("zoneForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
-
-        Swal.fire({
-            icon: "success",
-            title: "Updated!",
-            text: "Ward updated successfully!",
-            confirmButtonColor: "#28a745"
-
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
 
     });
 

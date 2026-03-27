@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title') Ward List @endsection
+@section('title') List Designations @endsection
 @section('style')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <style>
@@ -77,7 +77,7 @@ input:checked+.slider:before {
         <div class="row">
             <div class="col-12 col-sm-6">
                 <h3>
-                    Ward List
+                    List Designations
                 </h3>
             </div>
             <div class="col-12 col-sm-6">
@@ -103,7 +103,7 @@ input:checked+.slider:before {
                         <h4 class="mb-0 add"></h4>
                         <div class="d-flex gap-2">
 
-                            <a href="{{ route('wardcreate') }}" class="btn btn-primary">
+                            <a href="{{ route('designation.create') }}" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Add
                             </a>
@@ -115,68 +115,38 @@ input:checked+.slider:before {
                             <thead>
                                 <tr>
                                     <th style="width:10%">Sl.No</th>
-                                    <th style="width:20%">Ward Name</th>
-                                    <th style="width:20%">Ward No</th>
-                                    <th style="width:20%">Zone Name</th>
-                                    <th style="width:20%">Corporation</th>
+                                    <th style="width:20%">Designation</th>
+
                                     <th style="width:20%">Status</th>
                                     <th style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                              @foreach($entries as $entry)
                                 <tr>
-                                    <td>01</td>
-                                    <td>Karisandra</td>
-                                    <td>1234</td>
-                                    <td>BSWML</td>
-                                    <td>BSWML</td>
-
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$entry->name}}</td>
 
 
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" {{$entry->status ? 'checked' : ''}}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('wardedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('designation.edit', $entry->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('wardshow') }}" class="btn btn-sm btn-info text-white" title="View">
+                                            <a href="{{ route('designation.show', $entry->id) }}" class="btn btn-sm btn-info text-white"
+                                                title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>Karisandra</td>
-                                    <td>1234</td>
-                                    <td>BSWML</td>
-                                    <td>BSWML</td>
-
-
-
-
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('wardedit') }}" class="btn btn-sm btn-primary" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a href="{{ route('wardshow') }}" class="btn btn-sm btn-info text-white" title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -188,4 +158,15 @@ input:checked+.slider:before {
 @endsection
 
 @section('script')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+  @if(session()->has('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+ </script>
 @endsection

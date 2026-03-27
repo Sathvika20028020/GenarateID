@@ -55,13 +55,13 @@
 
                             <tr>
                                 <th>Designation Name</th>
-                                <td>Deputy</td>
+                                <td>{{$designation->name}}</td>
                             </tr>
 
                             <tr>
                                 <th>Status</th>
                                 <td>
-                                    <span class="badge bg-success">Active</span>
+                                    <span class="badge bg-{{$designation->status ? 'success' : 'danger'}}">{{$designation->status ? 'Active' : 'Inactive'}}</span>
                                 </td>
                             </tr>
                         </table>

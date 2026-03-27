@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title') User List @endsection
+@section('title') Ward List @endsection
 @section('style')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <style>
@@ -77,7 +77,7 @@ input:checked+.slider:before {
         <div class="row">
             <div class="col-12 col-sm-6">
                 <h3>
-                    User List
+                    Ward List
                 </h3>
             </div>
             <div class="col-12 col-sm-6">
@@ -87,7 +87,7 @@ input:checked+.slider:before {
                             <i data-feather="home"></i>
                         </a>
                     </li>
-                    <li class="breadcrumb-item"> list</li>
+                    <li class="breadcrumb-item">list</li>
                 </ol>
             </div>
         </div>
@@ -103,7 +103,7 @@ input:checked+.slider:before {
                         <h4 class="mb-0 add"></h4>
                         <div class="d-flex gap-2">
 
-                            <a href="{{ route('userscreate') }}" class="btn btn-primary">
+                            <a href="{{ route('ward.create') }}" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Add
                             </a>
@@ -115,66 +115,40 @@ input:checked+.slider:before {
                             <thead>
                                 <tr>
                                     <th style="width:10%">Sl.No</th>
-                                    <th style="width:20%">User Name</th>
-                                    <th style="width:20%">Email</th>
-                                    <th style="width:20%">Phone</th>
-                                    <th style="width:20%">Wards Assigned</th>
+                                    <th style="width:20%">Ward Name</th>
+                                    <th style="width:20%">Ward No</th>
+                                    <th style="width:20%">Zone Name</th>
+                                    <th style="width:20%">Corporation</th>
                                     <th style="width:20%">Status</th>
                                     <th style="width:20%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($entries as $entry)
                                 <tr>
-                                    <td>01</td>
-                                    <td>Meghana</td>
-                                    <td>Meghana@gmail.com</td>
-                                    <td>6361457263</td>
-                                    <td>BSWML</td>
-
-
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$entry->name}}</td>
+                                    <td>{{$entry->number}}</td>
+                                    <td>{{$entry->zone?->name}}</td>
+                                    <td>{{$entry->corporation?->name}}</td>
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" {{ $entry->status ? 'checked' : ''}}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('ward.edit', $entry->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
+                                            <a href="{{ route('ward.show', $entry->id) }}" class="btn btn-sm btn-info text-white" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>Meghana</td>
-                                    <td>Meghana@gmail.com</td>
-                                    <td>6361457263</td>
-                                    <td>BSWML</td>
-
-
-
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -186,4 +160,15 @@ input:checked+.slider:before {
 @endsection
 
 @section('script')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+  @if(session()->has('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+ </script>
 @endsection

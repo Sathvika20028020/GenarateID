@@ -52,12 +52,12 @@
 
                     <tr>
                         <th>Department Name</th>
-                        <td>BSWML</td>
+                        <td>{{$department->name}}</td>
                     </tr>
                     <tr>
                         <th>Status</th>
                         <td>
-                            <span class="badge bg-success">Active</span>
+                            <span class="badge bg-{{$department->status ? 'success' : 'danger'}}">{{$department->status ? 'Active' : 'Inactive'}}</span>
                         </td>
                     </tr>
                 </table>
