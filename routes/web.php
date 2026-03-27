@@ -167,3 +167,20 @@ Route::get('/corporationshow', function () {
     return view('admin.corporation.show');
 })->name('corporationshow');
 
+
+Route::get('/constituencylist', function () {
+    return view('admin.constituency.list');
+})->name('constituencylist');
+
+Route::get('/constituencycreate', function () {
+    return view('admin.constituency.create');
+})->name('constituencycreate');
+
+Route::get('/constituencyedit', function () {
+    return view('admin.constituency.edit');
+})->name('constituencyedit');
+
+Route::get('/constituencyshow', function () {
+    return view('admin.constituency.show');
+})->name('constituencyshow');
+
