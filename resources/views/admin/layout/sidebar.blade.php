@@ -30,8 +30,8 @@
                     </li>
 
                     <li class="sidebar-list">
-                        <a class="sidebar-link sidebar-title link-nav {{ request()->routeIs('genaratelist') ? 'active' : '' }}"
-                            href="{{ route('genaratelist') }}">
+                        <a class="sidebar-link sidebar-title link-nav {{ request()->routeIs('generate-id.index') ? 'active' : '' }}"
+                            href="{{ route('generate-id.index') }}">
                             <span><i class="bi bi-person-badge-fill"></i></span>
                             <span>Generate ID</span>
                         </a>

@@ -53,41 +53,41 @@
                         <tr>
                             <th style="width:30%">Photo</th>
                             <td>
-                                <img src="{{asset('/theme/images/logo-icon.png') }}" alt="Employee Photo"
+                                <img src="{{asset($generateId->image) }}" alt="Employee Photo"
                                     class="img-thumbnail" width="120">
                             </td>
                         </tr>
                         <tr>
                             <th>Name</th>
-                            <td>John Kumar</td>
+                            <td>{{$generateId->name}}</td>
                         </tr>
                         <tr>
                             <th>Employee ID</th>
-                            <td>EMP001</td>
+                            <td>{{$generateId->emp_id}}</td>
                         </tr>
                         <tr>
                             <th>Designation</th>
-                            <td>Manager</td>
+                            <td>{{$generateId->designation?->name}}</td>
                         </tr>
                         <tr>
                             <th>Phone</th>
-                            <td>9876543210</td>
+                            <td>{{$generateId->phone}}</td>
                         </tr>
                         <tr>
                             <th>Department</th>
-                            <td>HR</td>
+                            <td>{{$generateId->department?->name}}</td>
                         </tr>
                         <tr>
                             <th>Corporation</th>
-                            <td>Corporation 1</td>
+                            <td>{{$generateId->corporation?->name}}</td>
                         </tr>
                         <tr>
                             <th>Zone</th>
-                            <td>Zone 1</td>
+                            <td>{{$generateId->zone?->name}}</td>
                         </tr>
                         <tr>
                             <th>Ward</th>
-                            <td>Ward 1</td>
+                            <td>{{$generateId->ward?->name}}</td>
                         </tr>
                     </tbody>
                 </table>

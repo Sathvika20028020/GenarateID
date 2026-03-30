@@ -96,14 +96,14 @@
     <div class="card">
 
         <div class="card-body">
-            <form id="employeeForm" class="needs-validation" novalidate>
+            <form id="employeeForm" class="needs-validation" novalidate enctype="multipart/form-data" action="{{ route('generate-id.update', $generateId) }}" method="post">
+                    @csrf @method('put')
                 <!-- Hidden ID (for update purpose) -->
-                <input type="hidden" name="id" value="1">
                 <div class="row g-3">
                     <!-- Name -->
                     <div class="col-md-6">
                         <label class="form-label">Name</label>
-                        <input type="text" class="form-control" value="John" required>
+                        <input type="text" class="form-control" name="name" value="{{$generateId->name}}" required>
                         <div class="invalid-feedback">
                             Please enter name.
                         </div>
@@ -111,7 +111,7 @@
                     <!-- Employee ID -->
                     <div class="col-md-6">
                         <label class="form-label">Employee ID</label>
-                        <input type="text" class="form-control" value="EMP001" required>
+                        <input type="text" class="form-control" name="emp_id" value="{{$generateId->emp_id}}" required>
                         <div class="invalid-feedback">
                             Please enter Employee ID.
                         </div>
@@ -119,11 +119,11 @@
                     <!-- Designation -->
                     <div class="col-md-6">
                         <label class="form-label">Designation</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="designation_id" id="designation_id" required>
                             <option value="">Select Designation</option>
-                            <option selected>Manager</option>
-                            <option>Supervisor</option>
-                            <option>Staff</option>
+                            @foreach($designations as $designation)
+                            <option value="{{$designation->id}}" {{$generateId->designation_id == $designation->id ? 'selected' :''}}>{{$designation->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select designation.
@@ -132,13 +132,13 @@
                     <!-- Photo Upload (Optional in Edit) -->
                     <div class="col-md-6">
                         <label class="form-label">Change Photo (Max 2MB)</label>
-                        <input type="file" class="form-control" accept="image/*">
+                        <input type="file" name="image" class="form-control" accept="image/*">
                         <small class="text-muted">Leave blank if you don’t want to change photo.</small>
                     </div>
                     <!-- Phone Number -->
                     <div class="col-md-6">
                         <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" value="9876543210" maxlength="10" pattern="\d{10}"
+                        <input type="text" name="phone" value="{{$generateId->phone}}" class="form-control" value="9876543210" maxlength="10" pattern="\d{10}"
                             inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         <div class="invalid-feedback">
                             Enter valid 10 digit phone number.
@@ -147,11 +147,11 @@
                     <!-- Department -->
                     <div class="col-md-6">
                         <label class="form-label">Department</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="department_id" required onchange="getList(this.value, 'Designation', 'designation_id')">
                             <option value="">Select Department</option>
-                            <option>HR</option>
-                            <option selected>IT</option>
-                            <option>Admin</option>
+                            @foreach($departments as $department)
+                            <option value="{{$department->id}}" {{$generateId->department_id == $department->id ? 'selected' :''}}>{{$department->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select department.
@@ -160,11 +160,7 @@
                     <!-- Corporation -->
                     <div class="col-md-6">
                         <label class="form-label">Corporation</label>
-                        <select class="form-select" required>
-                            <option value="">Select Corporation</option>
-                            <option selected>Corporation 1</option>
-                            <option>Corporation 2</option>
-                        </select>
+                        <input type="text" class="form-control" value="West" readonly>
                         <div class="invalid-feedback">
                             Please select corporation.
                         </div>
@@ -172,10 +168,11 @@
                     <!-- Zone -->
                     <div class="col-md-6">
                         <label class="form-label">Zone</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="zone_id" required onchange="getList(this.value, 'Ward', 'ward_id')">
                             <option value="">Select Zone</option>
-                            <option selected>Zone 1</option>
-                            <option>Zone 2</option>
+                            @foreach($zones as $zone)
+                            <option value="{{$zone->id}}" {{$generateId->zone_id == $zone->id ? 'selected' :''}}>{{$zone->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select zone.
@@ -184,10 +181,11 @@
                     <!-- Ward -->
                     <div class="col-md-6">
                         <label class="form-label">Ward</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="ward_id" id="ward_id" required>
                             <option value="">Select Ward</option>
-                            <option selected>Ward 1</option>
-                            <option>Ward 2</option>
+                            @foreach($wards as $ward)
+                            <option value="{{$ward->id}}" {{$generateId->ward_id == $ward->id ? 'selected' :''}}>{{$ward->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select ward.
@@ -214,9 +212,10 @@
 
   form.addEventListener('submit', function (event) {
 
-    event.preventDefault();
+    
 
     if (!form.checkValidity()) {
+      event.preventDefault();
         event.stopPropagation();
         form.classList.add('was-validated');
         return;
@@ -237,18 +236,42 @@
     }
 
     // SweetAlert Success Popup
-    Swal.fire({
-    icon: 'success',
-    title: 'Updated!',
-    text: 'Employee details updated successfully',
-    confirmButtonColor: '#28a745'
-    }).then(() => {
-        form.reset();
-        form.classList.remove('was-validated');
-    });
+    // Swal.fire({
+    // icon: 'success',
+    // title: 'Updated!',
+    // text: 'Employee details updated successfully',
+    // confirmButtonColor: '#28a745'
+    // }).then(() => {
+    //     form.reset();
+    //     form.classList.remove('was-validated');
+    // });
 
   }, false);
 
 })();
     </script>
+
+
+<script>
+  function getList(id, type, eid){
+    $.ajax({
+      method: "POST",
+      url: "{{ route('generate-id.store') }}",
+      data: {_token: "{{csrf_token()}}", id: id, list:type}, 
+    })
+    .done(function (res) {
+      if(res.success){
+        var options = '';
+        $.each(res.list, function(key, value){
+            options += '<option value="' + value.id + '">' + value.name + '</option>';
+        });
+        options = '<option value="">Select '+type+'</option>' + options;
+        $('#'+eid).html(options);
+      }
+    })
+    .fail(function (err) {
+      console.log(err);              
+    });
+  }
+</script>
 @endsection

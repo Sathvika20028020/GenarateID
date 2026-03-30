@@ -100,13 +100,14 @@ input:checked+.slider:before {
 <div class="container mt-1">
     <div class="card ">
         <div class="card-body">
-            <form id="employeeForm" class="needs-validation" novalidate>
+            <form id="employeeForm" class="needs-validation" novalidate enctype="multipart/form-data" action="{{ route('generate-id.store') }}" method="post">
+                    @csrf
                 <div class="row g-3">
 
                     <!-- Name -->
                     <div class="col-md-6">
                         <label class="form-label">Name<span class="text-danger">*</span> </label>
-                        <input type="text" class="form-control" placeholder="Enter full name" required>
+                        <input type="text" name="name" class="form-control" placeholder="Enter full name" required>
                         <div class="invalid-feedback">
                             Please enter name.
                         </div>
@@ -115,7 +116,7 @@ input:checked+.slider:before {
                     <!-- Employee ID -->
                     <div class="col-md-6">
                         <label class="form-label">Employee ID<span class="text-danger">*</span> </label>
-                        <input type="text" class="form-control" placeholder="Enter employee ID" required>
+                        <input type="text" name="emp_id" class="form-control" placeholder="Enter employee ID" required>
                         <div class="invalid-feedback">
                             Please enter Employee ID.
                         </div>
@@ -124,11 +125,11 @@ input:checked+.slider:before {
                     <!-- Department -->
                     <div class="col-md-6">
                         <label class="form-label">Department<span class="text-danger">*</span> </label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="department_id" onchange="getList(this.value, 'Designation', 'designation_id')" required>
                             <option value="">Select Department</option>
-                            <option>HR</option>
-                            <option>IT</option>
-                            <option>Admin</option>
+                            @foreach($departments as $department)
+                            <option value="{{$department->id}}">{{$department->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select department.
@@ -138,11 +139,8 @@ input:checked+.slider:before {
                     <!-- Designation -->
                     <div class="col-md-6">
                         <label class="form-label">Designation<span class="text-danger">*</span> </label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="designation_id" id="designation_id" required>
                             <option value="">Select Designation</option>
-                            <option>Manager</option>
-                            <option>Supervisor</option>
-                            <option>Staff</option>
                         </select>
                         <div class="invalid-feedback">
                             Please select designation.
@@ -153,7 +151,7 @@ input:checked+.slider:before {
                     <div class="col-md-6">
                         <label class="form-label">Phone Number<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" placeholder="Enter 10 digit phone number" maxlength="10"
-                            pattern="\d{10}" inputmode="numeric"
+                            pattern="\d{10}" inputmode="numeric" name="phone"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         <div class="invalid-feedback">
                             Enter valid 10 digit phone number.
@@ -163,7 +161,7 @@ input:checked+.slider:before {
                     <!-- Photo Upload -->
                     <div class="col-md-6">
                         <label class="form-label">Photo (Max 2MB)<span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" accept="image/*" required>
+                        <input type="file" class="form-control" accept="image/*" required name="image">
                         <div class="invalid-feedback">
                             Please upload photo (Max 2MB).
                         </div>
@@ -178,10 +176,11 @@ input:checked+.slider:before {
                     <!-- Zone -->
                     <div class="col-md-6">
                         <label class="form-label">Zone <span class="text-danger">*</span></label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="zone_id" required onchange="getList(this.value, 'Ward', 'ward_id')">
                             <option value="">Select Zone</option>
-                            <option>Zone 1</option>
-                            <option>Zone 2</option>
+                            @foreach($zones as $zone)
+                            <option value="{{$zone->id}}">{{$zone->name}}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             Please select zone.
@@ -191,10 +190,8 @@ input:checked+.slider:before {
                     <!-- Ward -->
                     <div class="col-md-6">
                         <label class="form-label">Ward<span class="text-danger">*</span></label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="ward_id" id="ward_id" required>
                             <option value="">Select Ward</option>
-                            <option>Ward 1</option>
-                            <option>Ward 2</option>
                         </select>
                         <div class="invalid-feedback">
                             Please select ward.
@@ -222,9 +219,9 @@ input:checked+.slider:before {
 
     form.addEventListener('submit', function(event) {
 
-        event.preventDefault();
-
-        if (!form.checkValidity()) {
+      
+      if (!form.checkValidity()) {
+          event.preventDefault();
             event.stopPropagation();
             form.classList.add('was-validated');
             return;
@@ -245,18 +242,41 @@ input:checked+.slider:before {
         }
 
         // SweetAlert Success Popup
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Employee ID Created Successfully',
-            confirmButtonColor: '#ff6a88'
-        }).then(() => {
-            form.reset();
-            form.classList.remove('was-validated');
-        });
+        // Swal.fire({
+        //     icon: 'success',
+        //     title: 'Success!',
+        //     text: 'Employee ID Created Successfully',
+        //     confirmButtonColor: '#ff6a88'
+        // }).then(() => {
+        //     form.reset();
+        //     form.classList.remove('was-validated');
+        // });
 
     }, false);
 
 })();
+</script>
+
+<script>
+  function getList(id, type, eid){
+    $.ajax({
+      method: "POST",
+      url: "{{ route('generate-id.store') }}",
+      data: {_token: "{{csrf_token()}}", id: id, list:type}, 
+    })
+    .done(function (res) {
+      if(res.success){
+        var options = '';
+        $.each(res.list, function(key, value){
+            options += '<option value="' + value.id + '">' + value.name + '</option>';
+        });
+        options = '<option value="">Select '+type+'</option>' + options;
+        $('#'+eid).html(options);
+      }
+    })
+    .fail(function (err) {
+      console.log(err);              
+    });
+  }
 </script>
 @endsection
