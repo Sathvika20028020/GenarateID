@@ -24,6 +24,7 @@ class User extends Authenticatable
         'phone',
         'status',
         'ward_ids',
+        'department_ids',
         'email',
         'password',
         'role',
@@ -73,6 +74,29 @@ class User extends Authenticatable
         }
 
         return explode(',', $this->ward_ids);
+    }
+
+    public function getDepartmentNamesAttribute()
+    {
+        if (!$this->department_ids) {
+            return [];
+        }
+
+        $ids = explode(',', $this->department_ids);
+
+        return Department::whereIn('id', $ids)
+            ->pluck('name')
+            ->implode(', ');
+            // ->toArray();
+    }
+
+    public function getDepartmentsAttribute()
+    {
+        if (!$this->department_ids) {
+            return [];
+        }
+
+        return explode(',', $this->department_ids);
     }
 
 }

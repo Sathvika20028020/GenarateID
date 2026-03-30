@@ -173,4 +173,15 @@ input:checked+.slider:before {
 @endsection
 
 @section('script')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+  @if(session()->has('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+ </script>
 @endsection

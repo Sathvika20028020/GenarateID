@@ -124,57 +124,31 @@ input:checked+.slider:before {
                                 </tr>
                             </thead>
                             <tbody>
+                              @foreach($entries as $entry)
                                 <tr>
-                                    <td>01</td>
-                                    <td>Meghana</td>
-                                    <td>Meghana@gmail.com</td>
-                                    <td>6361457263</td>
-                                    <td>BSWML</td>
-
-
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$entry->name}}</td>
+                                    <td>{{$entry->email}}</td>
+                                    <td>{{$entry->phone}}</td>
+                                    <td>{{$entry->ward_names}}</td>
                                     <td>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" {{ $entry->status ? 'checked' : ''}}>
                                             <span class="slider"></span>
                                         </label>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('user.edit', $entry->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
+                                            <a href="{{ route('user.show', $entry->id) }}" class="btn btn-sm btn-info text-white" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>Meghana</td>
-                                    <td>Meghana@gmail.com</td>
-                                    <td>6361457263</td>
-                                    <td>BSWML</td>
-
-
-
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('usersedit') }}" class="btn btn-sm btn-primary" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a href="{{ route('usersshow') }}" class="btn btn-sm btn-info text-white" title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

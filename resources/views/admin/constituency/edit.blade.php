@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layout.app')
 <style>
     
     .form-section {
@@ -63,23 +63,18 @@
     <div class="form-section">
       
 
-      <form id="editForm" class="needs-validation" novalidate>
+      <form id="editForm" class="needs-validation" novalidate action="{{ route('constituency.update', $constituency->id) }}" method="post">
+                          @csrf @method('put')
         <div class="row g-4">
 
           <!-- Select Corporation -->
           <div class="col-md-6">
             <label class="form-label">Select Corporation</label>
-            <select class="form-select" id="corporation" required>
+            <select class="form-select" id="corporation" name="corporation_id" required>
               <option value="">Choose Corporation</option>
-              <option value="Bangalore Development Authority" data-kan="ಬೆಂಗಳೂರು ಅಭಿವೃದ್ಧಿ ಪ್ರಾಧಿಕಾರ">
-                Bangalore Development Authority
-              </option>
-              <option value="Bruhat Bengaluru Mahanagara Palike" data-kan="ಬೃಹತ್ ಬೆಂಗಳೂರು ಮಹಾನಗರ ಪಾಲಿಕೆ">
-                Bruhat Bengaluru Mahanagara Palike
-              </option>
-              <option value="Karnataka Urban Water Supply" data-kan="ಕರ್ನಾಟಕ ನಗರ ಜಲ ಸರಬರಾಜು">
-                Karnataka Urban Water Supply
-              </option>
+              @foreach($corporations as $corporation)
+              <option value="{{$corporation->id}}" data-kan="{{$corporation->name_kn}}" {{$corporation->id == $constituency->corporation_id ? 'selected' : ''}}>{{$corporation->name}}</option>
+              @endforeach
             </select>
             <div class="invalid-feedback">Please select a corporation.</div>
           </div>
@@ -87,7 +82,7 @@
           <!-- Corporation Kannada -->
           <div class="col-md-6">
             <label class="form-label">Corporation Name (Kannada)</label>
-            <input type="text" class="form-control readonly-box" id="corporationKan" readonly>
+            <input type="text" value="{{$constituency->corporation?->name_kn}}" class="form-control readonly-box" id="corporationKan" readonly>
           </div>
 
           <!-- Select Zone -->
@@ -95,10 +90,9 @@
             <label class="form-label">Select Zone</label>
             <select class="form-select" id="zone" required>
               <option value="">Choose Zone</option>
-              <option value="South Zone" data-kan="ದಕ್ಷಿಣ ವಲಯ">South Zone</option>
-              <option value="East Zone" data-kan="ಪೂರ್ವ ವಲಯ">East Zone</option>
-              <option value="West Zone" data-kan="ಪಶ್ಚಿಮ ವಲಯ">West Zone</option>
-              <option value="North Zone" data-kan="ಉತ್ತರ ವಲಯ">North Zone</option>
+              @foreach($zones as $zone)
+              <option value="{{$zone->id}}" data-kan="{{$zone->name_kn}}" {{$zone->id == $constituency->zone_id ? 'selected' : ''}}>{{$zone->name}}</option>
+              @endforeach
             </select>
             <div class="invalid-feedback">Please select a zone.</div>
           </div>
@@ -106,25 +100,22 @@
           <!-- Zone Kannada -->
           <div class="col-md-6">
             <label class="form-label">Zone Name (Kannada)</label>
-            <input type="text" class="form-control readonly-box" id="zoneKan" readonly>
+            <input type="text" value="{{$constituency->zone?->name_kn}}" class="form-control readonly-box" id="zoneKan" readonly>
           </div>
 
           <!-- Constituency English -->
           <div class="col-md-6">
             <label class="form-label">Constituency Name (English)</label>
-            <input type="text" class="form-control" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
+            <input type="text" value="{{$constituency->name}}" name="name" class="form-control" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
             <div class="invalid-feedback">Please enter constituency name in English.</div>
           </div>
 
           <!-- Constituency Kannada -->
           <div class="col-md-6">
             <label class="form-label">Constituency Name (Kannada)</label>
-            <input type="text" class="form-control" id="constituencyKan" placeholder="Enter Constituency Name in Kannada" required>
+            <input type="text" value="{{$constituency->name_kn}}" name="name_kn" class="form-control" id="constituencyKan" placeholder="Enter Constituency Name in Kannada" required>
             <div class="invalid-feedback">Please enter constituency name in Kannada.</div>
           </div>
-
-          <!-- Hidden ID -->
-          <input type="hidden" id="recordId" value="1">
 
           <!-- Update Button -->
           <div class="col-12 text-center mt-4">
@@ -166,16 +157,16 @@
     document.getElementById("zone").addEventListener("change", updateZoneKan);
 
     // Pre-fill edit data
-    window.onload = function () {
-      document.getElementById("recordId").value = existingData.id;
-      document.getElementById("corporation").value = existingData.corporation;
-      document.getElementById("zone").value = existingData.zone;
-      document.getElementById("constituencyEng").value = existingData.constituencyEng;
-      document.getElementById("constituencyKan").value = existingData.constituencyKan;
+    // window.onload = function () {
+    //   document.getElementById("recordId").value = existingData.id;
+    //   document.getElementById("corporation").value = existingData.corporation;
+    //   document.getElementById("zone").value = existingData.zone;
+    //   document.getElementById("constituencyEng").value = existingData.constituencyEng;
+    //   document.getElementById("constituencyKan").value = existingData.constituencyKan;
 
-      updateCorporationKan();
-      updateZoneKan();
-    };
+    //   updateCorporationKan();
+    //   updateZoneKan();
+    // };
 
     // Validation + SweetAlert + Refresh
     (() => {
@@ -184,39 +175,39 @@
       const form = document.getElementById('editForm');
 
       form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
           form.classList.add('was-validated');
           return;
         }
 
         // Here you can send updated data to backend
-        const updatedData = {
-          id: document.getElementById("recordId").value,
-          corporation: document.getElementById("corporation").value,
-          corporationKan: document.getElementById("corporationKan").value,
-          zone: document.getElementById("zone").value,
-          zoneKan: document.getElementById("zoneKan").value,
-          constituencyEng: document.getElementById("constituencyEng").value,
-          constituencyKan: document.getElementById("constituencyKan").value
-        };
+        // const updatedData = {
+        //   id: document.getElementById("recordId").value,
+        //   corporation: document.getElementById("corporation").value,
+        //   corporationKan: document.getElementById("corporationKan").value,
+        //   zone: document.getElementById("zone").value,
+        //   zoneKan: document.getElementById("zoneKan").value,
+        //   constituencyEng: document.getElementById("constituencyEng").value,
+        //   constituencyKan: document.getElementById("constituencyKan").value
+        // };
 
-        console.log("Updated Data:", updatedData);
+        // console.log("Updated Data:", updatedData);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Updated Successfully!',
-          text: 'Constituency details have been updated.',
-          confirmButtonColor: '#6c63ff',
-          confirmButtonText: 'OK'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            location.reload(); 
-            // OR window.location.href = "list-page.html";
-          }
-        });
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Updated Successfully!',
+        //   text: 'Constituency details have been updated.',
+        //   confirmButtonColor: '#6c63ff',
+        //   confirmButtonText: 'OK'
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     location.reload(); 
+        //     // OR window.location.href = "list-page.html";
+        //   }
+        // });
       }, false);
     })();
   </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Ward;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,7 +25,8 @@ class UserController extends Controller
     public function create()
     {
       $wards = Ward::get();
-        return view('admin.user.create', compact('wards'));
+      $departments = Department::where('status', 1)->get();
+        return view('admin.user.create', compact('wards','departments'));
     }
 
     /**
@@ -32,11 +34,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except('_token','password','wards');
-        $data['ward_ids'] = implode(',',$request->wards);
+        $data = $request->except('_token','password');
         $data['password'] = Hash::make($request->password);
         $data['role'] = 2;
         User::create($data);
+        \Session::flash('success', 'User added successfully!');
         return redirect()->route('user.index');
     }
 
@@ -45,7 +47,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return view('admin.user.show', compact('user'));
     }
 
     /**
@@ -62,12 +64,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $data = $request->except('_token','_method','password','wards');
-        $data['ward_ids'] = implode(',',$request->wards);
+        $data = $request->except('_token','_method','password');
         $data['role'] = 2;
         if($request->password)
         $data['password'] = Hash::make($request->password);
         $user->update($data);
+        \Session::flash('success', 'User updated successfully!');
         return redirect()->route('user.index');
     }
 

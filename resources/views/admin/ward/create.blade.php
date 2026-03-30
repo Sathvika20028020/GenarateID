@@ -122,15 +122,6 @@ input:checked+.slider:before {
                 <!-- Row 2 -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Zone<span class="text-danger">*</span> </label>
-                        <select class="form-select" name="zone_id" id="zoneSelect" required>
-                            <option value="">Select Zone</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select zone.
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
                         <label class="form-label">Corporation<span class="text-danger">*</span> </label>
                         <select class="form-select" name="corporation_id" id="corporationSelect" required>
                             <option value="">Select Corporation</option>
@@ -140,6 +131,26 @@ input:checked+.slider:before {
                         </select>
                         <div class="invalid-feedback">
                             Please select corporation.
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Zone<span class="text-danger">*</span> </label>
+                        <select class="form-select" name="zone_id" id="zoneSelect" required>
+                            <option value="">Select Zone</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select zone.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Constituency<span class="text-danger">*</span> </label>
+                        <select class="form-select" name="constituency_id" id="consSelect" required>
+                            <option value="">Select Constituency</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select zone.
                         </div>
                     </div>
                 </div>
@@ -208,6 +219,29 @@ input:checked+.slider:before {
                 });
                 options = '<option value="">Select Zone</option>' + options;
                 $('#zoneSelect').html(options);
+              }
+            })
+            .fail(function (err) {
+              console.log(err);              
+            });
+        });
+
+         document.getElementById("zoneSelect").addEventListener("change", function () {
+            const selectedValue = this.value;
+
+            $.ajax({
+              method: "POST",
+              url: "{{ route('ward.store') }}",
+              data: {_token: "{{csrf_token()}}", id: selectedValue, list:'cons'}, 
+            })
+            .done(function (res) {
+              if(res.success){
+                var options = '';
+                $.each(res.list, function(key, value){
+                    options += '<option value="' + value.id + '">' + value.name + '</option>';
+                });
+                options = '<option value="">Choose Constituency</option>' + options;
+                $('#consSelect').html(options);
               }
             })
             .fail(function (err) {

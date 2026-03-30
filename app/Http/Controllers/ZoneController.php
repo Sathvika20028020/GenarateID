@@ -33,6 +33,7 @@ class ZoneController extends Controller
     {
         $data = $request->except('_token');
         Zone::create($data);
+        \Session::flash('success', 'Zone added successfully!');
         return redirect()->route('zone.index');
     }
 
@@ -60,6 +61,7 @@ class ZoneController extends Controller
     {
         $data = $request->except('_token', '_method');
         $zone->update($data);
+        \Session::flash('success', 'Zone updated successfully!');
         return redirect()->route('zone.index');
     }
 

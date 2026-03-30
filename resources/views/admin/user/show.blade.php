@@ -50,19 +50,19 @@
                 <tbody>
                     <tr>
                         <th width="30%">User Name</th>
-                        <td>Arun Kumar</td>
+                        <td>{{$user->name}}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>arun@gmail.com</td>
+                        <td>{{$user->email}}</td>
                     </tr>
                     <tr>
                         <th>Phone</th>
-                        <td>9876543210</td>
+                        <td>{{$user->phone}}</td>
                     </tr>
                     <tr>
                         <th>Ward</th>
-                        <td>Ward 1</td>
+                        <td>{{$user->ward_names}}</td>
                     </tr>
                 </tbody>
             </table>

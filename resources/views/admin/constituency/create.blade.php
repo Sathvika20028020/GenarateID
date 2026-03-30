@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layout.app')
 <style>
    .form-section {
       background: #fff;
@@ -60,23 +60,18 @@
   <!-- Container-fluid starts-->
  <div class="container-fluid">
     <div class="form-section">
-      <form id="constituencyForm" class="needs-validation" novalidate>
+      <form id="constituencyForm" class="needs-validation" novalidate action="{{ route('constituency.store') }}" method="post">
+                          @csrf
         <div class="row g-4">
 
           <!-- Select Corporation -->
           <div class="col-md-6">
             <label class="form-label">Select Corporation</label>
-            <select class="form-select" id="corporation" required>
+            <select class="form-select" id="corporationSelect" name="corporation_id" required>
               <option value="">Choose Corporation</option>
-              <option value="Bangalore Development Authority" data-kan="ಬೆಂಗಳೂರು ಅಭಿವೃದ್ಧಿ ಪ್ರಾಧಿಕಾರ">
-                Bangalore Development Authority
-              </option>
-              <option value="Bruhat Bengaluru Mahanagara Palike" data-kan="ಬೃಹತ್ ಬೆಂಗಳೂರು ಮಹಾನಗರ ಪಾಲಿಕೆ">
-                Bruhat Bengaluru Mahanagara Palike
-              </option>
-              <option value="Karnataka Urban Water Supply" data-kan="ಕರ್ನಾಟಕ ನಗರ ಜಲ ಸರಬರಾಜು">
-                Karnataka Urban Water Supply
-              </option>
+              @foreach($corporations as $corporation)
+              <option value="{{$corporation->id}}" data-kan="{{$corporation->name_kn}}">{{$corporation->name}}</option>
+              @endforeach
             </select>
             <div class="invalid-feedback">Please select a corporation.</div>
           </div>
@@ -90,12 +85,8 @@
           <!-- Select Zone -->
           <div class="col-md-6">
             <label class="form-label">Select Zone</label>
-            <select class="form-select" id="zone" required>
+            <select class="form-select" name="zone_id" id="zoneSelect" required>
               <option value="">Choose Zone</option>
-              <option value="South Zone" data-kan="ದಕ್ಷಿಣ ವಲಯ">South Zone</option>
-              <option value="East Zone" data-kan="ಪೂರ್ವ ವಲಯ">East Zone</option>
-              <option value="West Zone" data-kan="ಪಶ್ಚಿಮ ವಲಯ">West Zone</option>
-              <option value="North Zone" data-kan="ಉತ್ತರ ವಲಯ">North Zone</option>
             </select>
             <div class="invalid-feedback">Please select a zone.</div>
           </div>
@@ -109,14 +100,14 @@
           <!-- Constituency English -->
           <div class="col-md-6">
             <label class="form-label">Constituency Name (English)</label>
-            <input type="text" class="form-control" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
+            <input type="text" name="name" class="form-control" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
             <div class="invalid-feedback">Please enter constituency name in English.</div>
           </div>
 
           <!-- Constituency Kannada -->
           <div class="col-md-6">
             <label class="form-label">Constituency Name (Kannada)</label>
-            <input type="text" class="form-control" id="constituencyKan" placeholder="Enter Constituency Name in Kannada" required>
+            <input type="text" name="name_kn" class="form-control" id="constituencyKan" placeholder="Enter Constituency Name in Kannada" required>
             <div class="invalid-feedback">Please enter constituency name in Kannada.</div>
           </div>
 
@@ -136,12 +127,32 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     // Auto-fill Kannada fields
-    document.getElementById("corporation").addEventListener("change", function () {
+    document.getElementById("corporationSelect").addEventListener("change", function () {
       const selected = this.options[this.selectedIndex];
       document.getElementById("corporationKan").value = selected.getAttribute("data-kan") || "";
+      const selectedValue = this.value;
+      $.ajax({
+        method: "POST",
+        url: "{{ route('ward.store') }}",
+        data: {_token: "{{csrf_token()}}", id: selectedValue, list: 'zones'}, 
+      })
+      .done(function (res) {
+        if(res.success){
+          var options = '';
+          $.each(res.list, function(key, value){
+              options += '<option value="' + value.id + '" data-kan="' + (value.name_kn??'') + '">' + value.name + '</option>';
+          });
+          options = '<option value="">Choose Zone</option>' + options;
+          
+          $('#zoneSelect').html(options);
+        }
+      })
+      .fail(function (err) {
+        console.log(err);              
+      });
     });
 
-    document.getElementById("zone").addEventListener("change", function () {
+    document.getElementById("zoneSelect").addEventListener("change", function () {
       const selected = this.options[this.selectedIndex];
       document.getElementById("zoneKan").value = selected.getAttribute("data-kan") || "";
     });
@@ -153,28 +164,48 @@
       const form = document.getElementById('constituencyForm');
 
       form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
           form.classList.add('was-validated');
           return;
-        }
+        }else form.submit(); vdrdv
 
         // Success alert
-        Swal.fire({
-          icon: 'success',
-          title: 'Submitted Successfully!',
-          text: 'Your constituency details have been saved.',
-          confirmButtonColor: '#6c63ff',
-          confirmButtonText: 'OK'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Refresh page after OK
-            location.reload();
-          }
-        });
+        // Swal.fire({vchtdrrdrdgr cvdrerde´˳
+        //   icon: 'success',
+        //   title: 'Submitted Successfully!',
+        //   text: 'Your constituency details have been saved.',
+        //   confirmButtonColor: '#6c63ff',
+        //   confirmButtonText: 'OK'
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     // Refresh page after OK
+        //     location.reload();
+        //   }
+        // });
       }, false);
     })();
   </script>
+
+  <script>
+
+         const zoneMap = {
+            @foreach($zones as $zone)
+              "{{$zone->id}}": "{{$zone->name_kn}}",
+            @endforeach
+        };
+
+        document.getElementById("zoneSelect").addEventListener("change", function () {
+            const selectedValue = this.value;
+            const kannadaInput = document.getElementById("Zone_name_kn");
+
+            if (zoneMap[selectedValue]) {
+                kannadaInput.value = zoneMap[selectedValue];
+            } else {
+                kannadaInput.value = "";
+            }
+        });
+    </script>
 @endsection

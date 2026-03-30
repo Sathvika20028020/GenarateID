@@ -100,12 +100,13 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="userForm" class="needs-validation" novalidate>
+            <form id="userForm" class="needs-validation" novalidate action="{{ route('user.store') }}" method="post">
+                        @csrf
                 <div class="row g-3">
                     <!-- User Name -->
                     <div class="col-md-6">
                         <label class="form-label fw-bold">User Name<span class="text-danger">*</span> </label>
-                        <input type="text" class="form-control" placeholder="Enter User Name" required>
+                        <input type="text" class="form-control" placeholder="Enter User Name" name="name" required>
                         <div class="invalid-feedback">
                             Please enter user name.
                         </div>
@@ -113,7 +114,7 @@ input:checked+.slider:before {
                     <!-- Email -->
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Email<span class="text-danger">*</span> </label>
-                        <input type="email" class="form-control" placeholder="Enter Email" required>
+                        <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
                         <div class="invalid-feedback">
                             Please enter valid email.
                         </div>
@@ -123,6 +124,7 @@ input:checked+.slider:before {
     <label class="form-label fw-bold">Phone<span class="text-danger">*</span> </label>
     <input type="text" 
            class="form-control" 
+           name="phone"
            placeholder="Enter 10 digit phone number"
            maxlength="10" 
            pattern="\d{10}" 
@@ -136,7 +138,7 @@ input:checked+.slider:before {
                     <!-- Password -->
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Password<span class="text-danger">*</span> </label>
-                        <input type="password" class="form-control" placeholder="Enter Password" required>
+                        <input name="password" type="password" class="form-control" placeholder="Enter Password" required>
                         <div class="invalid-feedback">
                             Please enter password.
                         </div>
@@ -148,12 +150,12 @@ input:checked+.slider:before {
                         <!-- Dropdown -->
                         <select id="wardSelect" class="form-select">
                             <option value="">Select Ward</option>
-                            <option value="Ward 1">Ward 1</option>
-                            <option value="Ward 2">Ward 2</option>
-                            <option value="Ward 3">Ward 3</option>
-                            <option value="Ward 4">Ward 4</option>
+                                @foreach($wards as $ward)
+                                  <option value="{{$ward->id}}">{{$ward->name}} - Ward {{$ward->number}}</option>
+                                @endforeach
                         </select>
                     </div>
+                    <input type="hidden" id="ward_ids" name="ward_ids">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Department Selection<span class="text-danger">*</span> </label>
                         <!-- Badge container -->
@@ -161,12 +163,12 @@ input:checked+.slider:before {
                         <!-- Dropdown -->
                         <select id="departmentSelect" class="form-select">
                             <option value="">Select Department</option>
-                            <option value="Department 1">Department 1</option>
-                            <option value="Department 2">Department 2</option>
-                            <option value="Department 3">Department 3</option>
-                            <option value="Department 4">Department 4</option>
+                                @foreach($departments as $department)
+                                  <option value="{{$department->id}}">{{$department->name}}</option>
+                                @endforeach
                         </select>
                     </div>
+                    <input type="hidden" id="department_ids" name="department_ids">
                 </div>
                 <!-- Submit Button -->
                 <div class="text-center mt-4">
@@ -204,7 +206,9 @@ function renderWardBadges() {
         const badge = document.createElement('span');
         badge.className = 'badge bg-primary me-1';
         badge.style.cursor = 'pointer';
-        badge.innerHTML = `${ward} <span data-index="${index}">&times;</span>`;
+
+        // ✅ show TEXT in badge
+        badge.innerHTML = `${ward.text} <span data-index="${index}">&times;</span>`;
 
         badge.querySelector('span').addEventListener('click', function() {
             const idx = this.getAttribute('data-index');
@@ -214,27 +218,32 @@ function renderWardBadges() {
 
         wardBadges.appendChild(badge);
 
+        // highlight selected option
         Array.from(wardSelect.options).forEach(opt => {
-            if (opt.value === ward) {
+            if (opt.value === ward.value) {
                 opt.style.backgroundColor = '#6362e7';
                 opt.style.color = '#ffffff';
             }
         });
 
     });
+
+    // ✅ update hidden input with values only
+    document.getElementById('ward_ids').value =
+        selectedWards.map(w => w.value).join(',');
 }
 
 wardSelect.addEventListener('change', function() {
 
     const value = wardSelect.value;
+    const text = wardSelect.selectedOptions[0].text;
 
-    if (value && !selectedWards.includes(value)) {
-        selectedWards.push(value);
+    if (value && !selectedWards.some(w => w.value === value)) {
+        selectedWards.push({ value, text });
         renderWardBadges();
     }
 
     wardSelect.value = '';
-
 });
 
 
@@ -259,7 +268,9 @@ function renderDepartmentBadges() {
         const badge = document.createElement('span');
         badge.className = 'badge bg-success me-1';
         badge.style.cursor = 'pointer';
-        badge.innerHTML = `${dept} <span data-index="${index}">&times;</span>`;
+
+        // ✅ show TEXT instead of value
+        badge.innerHTML = `${dept.text} <span data-index="${index}">&times;</span>`;
 
         badge.querySelector('span').addEventListener('click', function() {
             const idx = this.getAttribute('data-index');
@@ -269,27 +280,32 @@ function renderDepartmentBadges() {
 
         departmentBadges.appendChild(badge);
 
+        // highlight selected options
         Array.from(departmentSelect.options).forEach(opt => {
-            if (opt.value === dept) {
+            if (opt.value === dept.value) {
                 opt.style.backgroundColor = '#198754';
                 opt.style.color = '#ffffff';
             }
         });
 
     });
+
+    // ✅ update hidden input (values only)
+    document.getElementById('department_ids').value =
+        selectedDepartments.map(d => d.value).join(',');
 }
 
 departmentSelect.addEventListener('change', function() {
 
     const value = departmentSelect.value;
+    const text = departmentSelect.selectedOptions[0].text;
 
-    if (value && !selectedDepartments.includes(value)) {
-        selectedDepartments.push(value);
+    if (value && !selectedDepartments.some(d => d.value === value)) {
+        selectedDepartments.push({ value, text });
         renderDepartmentBadges();
     }
 
     departmentSelect.value = '';
-
 });
 </script>
 <script>
@@ -299,24 +315,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
     form.addEventListener("submit", function(event) {
 
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
 
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "User created successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
+        // Swal.fire({
+        //     icon: "success",
+        //     title: "Success!",
+        //     text: "User created successfully!",
+        //     confirmButtonColor: "#ff6a88"
+        // }).then(() => {
 
-            location.reload(); // page refresh after clicking OK
+        //     location.reload(); // page refresh after clicking OK
 
-        });
+        // });
 
     });
 

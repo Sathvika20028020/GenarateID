@@ -37,13 +37,14 @@ class WardController extends Controller
     {
         if($request->ajax()){
           if($request->list == 'zones')
-            $list = Zone::select('id', 'name')->where('corporation_id', $request->id)->get();
+            $list = Zone::select('id', 'name', 'name_kn')->where('corporation_id', $request->id)->get();
           else if($request->list == 'cons')
-            $list = Constituency::select('id', 'name')->where('zone_id', $request->id)->get();
+            $list = Constituency::select('id', 'name', 'name_kn')->where('zone_id', $request->id)->get();
           return response()->json(['success' => true, 'list' => $list]);
         }
         $data = $request->except('_token');
         Ward::create($data);
+        \Session::flash('success', 'Ward added successfully!');
         return redirect()->route('ward.index');
     }
 
@@ -73,6 +74,7 @@ class WardController extends Controller
     {
         $data = $request->except('_token', '_method');
         $ward->update($data);
+        \Session::flash('success', 'Ward updated successfully!');
         return redirect()->route('ward.index');
     }
 

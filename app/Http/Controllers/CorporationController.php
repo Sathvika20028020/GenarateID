@@ -31,6 +31,7 @@ class CorporationController extends Controller
     {
         $data = $request->except('_token');
         Corporation::create($data);
+        \Session::flash('success', 'Corporation added successfully!');
         return redirect()->route('corporation.index');
     }
 
@@ -57,6 +58,7 @@ class CorporationController extends Controller
     {
         $data = $request->except('_token', '_method');
         $corporation->update($data);
+        \Session::flash('success', 'Corporation updated successfully!');
         return redirect()->route('corporation.index');
     }
 

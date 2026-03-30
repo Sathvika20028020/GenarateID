@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layout.app')
 
 @section('style')
 <style>
@@ -107,56 +107,24 @@ input:checked+.slider:before {
                                 </tr>
                             </thead>
                             <tbody>
+                              @foreach($entries as $entry)
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td>Bangalore Development Authority</td>
-                                    <td>ಬೆಂಗಳೂರು ಅಭಿವೃದ್ಧಿ ಪ್ರಾಧಿಕಾರ</td>
-                                    <td>South Zone</td>
-                                    <td>ದಕ್ಷಿಣ ವಲಯ</td>
-                                    <td>Jayanagar</td>
-                                    <td>ಜಯನಗರ</td>
+                                    <td class="text-center">{{$loop->iteration}}</td>
+                                    <td>{{$entry->corporation?->name}}</td>
+                                    <td>{{$entry->corporation?->name_kn}}</td>
+                                    <td>{{$entry->zone?->name}}</td>
+                                    <td>{{$entry->zone?->name_kn}}</td>
+                                    <td>{{$entry->name}}</td>
+                                    <td>{{$entry->name_kn}}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-{{ $entry->status ? 'success' : 'danger' }}">{{ $entry->status ? 'Active' : 'Inactive' }}</span>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-sm btn-warning me-1">Edit</button>
-                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                        <a href="{{ route('constituency.edit', $entry->id) }}" class="btn btn-sm btn-warning me-1 px-2">Edit</a>
+                                        <a href="" class="btn btn-sm btn-danger px-2">Delete</a>
                                     </td>
                                 </tr>
-
-                                <tr>
-                                    <td class="text-center">2</td>
-                                    <td>Bruhat Bengaluru Mahanagara Palike</td>
-                                    <td>ಬೃಹತ್ ಬೆಂಗಳೂರು ಮಹಾನಗರ ಪಾಲಿಕೆ</td>
-                                    <td>East Zone</td>
-                                    <td>ಪೂರ್ವ ವಲಯ</td>
-                                    <td>Mahadevapura</td>
-                                    <td>ಮಹದೇವಪುರ</td>
-                                    <td class="text-center">
-                                        <span class="badge bg-success">Active</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-warning me-1">Edit</button>
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="text-center">3</td>
-                                    <td>Karnataka Urban Water Supply</td>
-                                    <td>ಕರ್ನಾಟಕ ನಗರ ಜಲ ಸರಬರಾಜು</td>
-                                    <td>West Zone</td>
-                                    <td>ಪಶ್ಚಿಮ ವಲಯ</td>
-                                    <td>Rajajinagar</td>
-                                    <td>ರಾಜಾಜಿನಗರ</td>
-                                    <td class="text-center">
-                                        <span class="badge bg-secondary">Inactive</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-warning me-1">Edit</button>
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </td>
-                                </tr>
+                                 @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -168,6 +136,17 @@ input:checked+.slider:before {
 @endsection
 
 @section('script')
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script>
+  @if(session()->has('success'))
+        Swal.fire({
+            icon: "success",
+            title: "Success!",
+            text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+ </script>
 <script>
 function openViewPage(button) {
     let row = button.closest("tr");

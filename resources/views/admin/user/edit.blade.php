@@ -100,40 +100,41 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="userForm" class="needs-validation" novalidate>
+            <form id="userForm" class="needs-validation" novalidate action="{{ route('user.update', $user->id) }}" method="post">
+                        @csrf @method('put')
                 <div class="row g-3">
                     <!-- User Name -->
                     <div class="col-md-6">
                         <label class="form-label">User Name</label>
-                        <input type="text" class="form-control" value="Arun Kumar" required>
+                        <input type="text" class="form-control" value="{{$user->name}}" name="name" required>
                         <div class="invalid-feedback">Please enter user name.</div>
                     </div>
                     <!-- Email -->
                     <div class="col-md-6">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="arun@gmail.com" required>
+                        <input type="email" class="form-control" name="email" required value="{{$user->email}}">
                         <div class="invalid-feedback">Please enter valid email.</div>
                     </div>
                     <!-- Phone -->
                     <div class="col-md-6">
                         <label class="form-label">Phone</label>
-                        <input type="text" class="form-control" value="9876543210" maxlength="10" required>
+                        <input type="text" class="form-control" name="phone" value="{{$user->phone}}" maxlength="10" required>
                         <div class="invalid-feedback">Enter valid 10 digit phone number.</div>
                     </div>
                     <!-- Password -->
                     <div class="col-md-6">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" value="123456" required>
+                        <input type="password" class="form-control" >
                         <div class="invalid-feedback">Please enter password.</div>
                     </div>
                     <!-- Ward Selection -->
                     <div class="col-md-6">
                         <label class="form-label">Ward Selection</label>
-                        <select class="form-select" required>
+                        <select class="form-select" name="wards[]" multiple required>
                             <option value="">Select Ward</option>
-                            <option selected>Ward 1</option>
-                            <option>Ward 2</option>
-                            <option>Ward 3</option>
+                            @foreach($wards as $ward)
+                              <option value="{{$ward->id}}" {{ in_array($ward->id, $user->wards) ? 'selected' : '' }}>{{$ward->name}} - Ward {{$ward->number}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -156,23 +157,23 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("userForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
 
         if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
 
-        Swal.fire({
-            icon: "success",
-            title: "Updated!",
-            text: "User updated successfully!",
-            confirmButtonColor: "#28a745"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
+        // Swal.fire({
+        //     icon: "success",
+        //     title: "Updated!",
+        //     text: "User updated successfully!",
+        //     confirmButtonColor: "#28a745"
+        // }).then(() => {
+        //     form.reset();
+        //     form.classList.remove("was-validated");
+        // });
 
     });
 

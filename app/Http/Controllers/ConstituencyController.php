@@ -35,6 +35,7 @@ class ConstituencyController extends Controller
     {
         $data = $request->except('_token');
         Constituency::create($data);
+        \Session::flash('success', 'Constituency added successfully!');
         return redirect()->route('constituency.index');
     }
 
@@ -63,6 +64,7 @@ class ConstituencyController extends Controller
     {
         $data = $request->except('_token', '_method');
         $constituency->update($data);
+        \Session::flash('success', 'Constituency updated successfully!');
         return redirect()->route('constituency.index');
     }
 
