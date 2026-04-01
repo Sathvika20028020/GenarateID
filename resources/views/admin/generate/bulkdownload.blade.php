@@ -60,7 +60,7 @@
             <div class="col-md-4">
                 <!-- <label class="form-label fw-semibold fs-5">Zone</label> -->
                 <select class="form-select filter-select" id="zoneSelect">
-                    <option value="all">Select Zone</option>
+                    <option value="all">Select Department</option>
                     <option value="west">West Zone</option>
                     <option value="east">East Zone</option>
                     <option value="south">South Zone</option>
@@ -72,12 +72,12 @@
             <div class="col-md-4">
                 <!-- <label class="form-label fw-semibold fs-5">Ward</label> -->
                 <select class="form-select filter-select" id="wardSelect">
-                    <option value="all">Select Ward</option>
-                    <option value="1">Ward 1</option>
-                    <option value="2">Ward 2</option>
-                    <option value="3">Ward 3</option>
-                    <option value="4">Ward 4</option>
-                    <option value="5">Ward 5</option>
+                    <option value="all">Select Designation</option>
+                    <option value="1">Designation 1</option>
+                    <option value="2">Designation 2</option>
+                    <option value="3">Designation 3</option>
+                    <option value="4">Designation 4</option>
+                    <option value="5">Designation 5</option>
                 </select>
             </div>
             <!-- Corporation -->

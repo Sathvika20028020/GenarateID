@@ -116,7 +116,7 @@ input:checked+.slider:before {
                                 <tr>
                                     <th style="width:10%">Sl.No</th>
                                     <th style="width:20%">Designation</th>
-
+                                    <th style="width:20%">Department</th>
                                     <th style="width:20%">Status</th>
                                     <th style="width:20%">Actions</th>
                                 </tr>
@@ -126,7 +126,7 @@ input:checked+.slider:before {
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$entry->name}}</td>
-
+                                    <td>Corporation</td>
 
                                     <td>
                                         <label class="switch">

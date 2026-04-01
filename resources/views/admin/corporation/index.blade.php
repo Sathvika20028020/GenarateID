@@ -102,7 +102,7 @@ input:checked+.slider:before {
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="mb-0 add"></h4>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('corporationcreate') }}" class="btn btn-primary">
+                            <a href="{{ route('corporation.create') }}" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i>
                                 Add
                             </a>
@@ -131,10 +131,10 @@ input:checked+.slider:before {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('corporationedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('corporation.edit', 1) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('corporationshow') }}" class="btn btn-sm btn-info text-white"
+                                            <a href="{{ route('corporation.show', 1) }}" class="btn btn-sm btn-info text-white"
                                                 title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
@@ -152,10 +152,10 @@ input:checked+.slider:before {
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('corporationedit') }}" class="btn btn-sm btn-primary" title="Edit">
+                                            <a href="{{ route('corporation.edit', 2) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('corporationshow') }}" class="btn btn-sm btn-info text-white"
+                                            <a href="{{ route('corporation.show', 2) }}" class="btn btn-sm btn-info text-white"
                                                 title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>

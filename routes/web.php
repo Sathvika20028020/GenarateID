@@ -63,3 +63,9 @@ Route::get('/bulkdownload', function () {
 })->name('bulkdownload');
 
 
+
+
+
+Route::get('/forgot', function () {
+    return view('auth.forgot');
+  })->name('forgot');
