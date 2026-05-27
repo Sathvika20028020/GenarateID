@@ -2,8 +2,8 @@
     <div>
         <div class="logo-wrapper d-flex align-items-center gap-2">
             <a href="index.html" class="d-flex align-items-center">
-                <img class="img-fluid for-light" src="{{asset('/theme/images/small-white-logo.png') }}" alt="">
-                <img class="img-fluid for-dark" src="{{asset('/theme/images/small-white-logo.png') }}" alt="">
+                <img class="img-fluid for-light" src="{{asset('/theme/images/logoicon2.png') }}" alt="" style="border-radius: 56%;">
+                <img class="img-fluid for-dark" src="{{asset('/theme/images/logoicon2.png') }}" alt="" style="border-radius: 56%;">
             </a>
             <h5 class="mb-0 ms-1 fw-bold fs-6 ">Genarate ID - Admin</h5>
             <div class="back-btn ms-3">
@@ -15,7 +15,7 @@
             <div id="sidebar-menu">
                 <ul class="sidebar-links" id="simple-bar">
                     <li class="back-btn"><a href="#"><img class="img-fluid"
-                                src="{{asset('/theme/images/logo-icon.png') }}" alt=""></a>
+                                src="{{asset('/theme/images/logoicon2.png') }}" alt="" style="border-radius: 56%;"></a>
                         <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2"
                                 aria-hidden="true"> </i></div>
                     </li>
