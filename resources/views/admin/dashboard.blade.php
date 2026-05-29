@@ -40,196 +40,257 @@
     <!-- Container-fluid starts-->
     <div class="container-fluid general-widget">
         <div class="row mb-4 align-items-end">
-        <!-- Corporation -->
-        <div class="col-md-4">
-            <!-- <label class="form-label fw-semibold fs-5">Corporation</label> -->
-            <select class="form-select filter-select" id="corporationSelect">
-                <option value="central" selected>West</option>
-            </select>
+            <!-- Corporation -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Corporation</label>
+                <select class="form-select filter-select" id="corporationSelect">
+                    <option value="">All Corporations</option>
+                    @foreach($corporations as $corp)
+                        <option value="{{ $corp->id }}">{{ $corp->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <!-- Zone -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Zone</label>
+                <select class="form-select filter-select" id="zoneSelect">
+                    <option value="">All Zones</option>
+                </select>
+            </div>
+            <!-- Ward -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Ward</label>
+                <select class="form-select filter-select" id="wardSelect">
+                    <option value="">All Wards</option>
+                </select>
+            </div>
         </div>
-        <!-- Zone -->
-        <div class="col-md-4">
-            <!-- <label class="form-label fw-semibold fs-5">Zone</label> -->
-            <select class="form-select filter-select" id="zoneSelect">
-                <option value="all">Select Zone</option>
-                <option value="west">West Zone</option>
-                <option value="east">East Zone</option>
-                <option value="south">South Zone</option>
-                <option value="north">North Zone</option>
-                <option value="mahadevapura">Mahadevapura</option>
-            </select>
+        <div class="row" id="statsWidgets">
+            <!-- Dynamic widget cards will load here via AJAX -->
         </div>
-        <!-- Ward -->
-        <div class="col-md-4">
-            <!-- <label class="form-label fw-semibold fs-5">Ward</label> -->
-            <select class="form-select filter-select" id="wardSelect">
-                <option value="all">Select Ward</option>
-                <option value="1">Ward 1</option>
-                <option value="2">Ward 2</option>
-                <option value="3">Ward 3</option>
-                <option value="4">Ward 4</option>
-                <option value="5">Ward 5</option>
-            </select>
-        </div>
-    </div>
-        <div class="row">
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">Total ID Cards</h6>
-                                <h3 class="mb-0 counter">199</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#ffcd21;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-secondary" role="progressbar" style="width: 75%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">Designation1</h6>
-                                <h3 class="mb-0 counter">50</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#9ace3e;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-success" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">Designation2</h6>
-                                <h3 class="mb-0 counter">30</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#7366ff;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-primary" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">Designation3</h6>
-                                <h3 class="mb-0 counter">25</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#dc3545;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-danger" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">West</h6>
-                                <h3 class="mb-0 counter">25</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#ff7f50;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-warning" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">South</h6>
-                                <h3 class="mb-0 counter">25</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#28a745;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-info" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 col-xl-3 col-lg-3">
-                <div class="card o-hidden border">
-                    <div class="card-body">
-                        <div class="media static-widget">
-                            <div class="media-body">
-                                <h6 class="font-roboto">North</h6>
-                                <h3 class="mb-0 counter">25</h3>
-                            </div>
-                            <i class="fas fa-school fa-2x" style="color:#007bff;"></i>
-                        </div>
-                        <div class="progress-widget">
-                            <div class="progress sm-progress-bar progress-animate">
-                                <div class="progress-gradient-dark" role="progressbar" style="width: 60%"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <span class="animate-circle"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            
-        </div>
-
         <!-- Container-fluid Ends-->
     </div>
-    <!-- footer start-->
 @endsection
 
 @section('script')
+    <script>
+        $(document).ready(function() {
+            function loadStats() {
+                let corpId = $('#corporationSelect').val();
+                let zoneId = $('#zoneSelect').val();
+                let wardId = $('#wardSelect').val();
+
+                $('#statsWidgets').html(`
+                    <div class="col-12 text-center my-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `);
+
+                $.ajax({
+                    url: "{{ route('dashboard') }}",
+                    type: 'GET',
+                    data: {
+                        corporation_id: corpId,
+                        zone_id: zoneId,
+                        ward_id: wardId
+                    },
+                    success: function(data) {
+                        let html = '';
+                        
+                        // Total ID Cards Card
+                        html += `
+                        <div class="col-sm-3 col-xl-3 col-lg-3">
+                            <div class="card o-hidden border shadow-sm">
+                                <div class="card-body">
+                                    <div class="media static-widget">
+                                        <div class="media-body">
+                                            <h6 class="font-roboto fw-bold text-muted">Total ID Cards</h6>
+                                            <h3 class="mb-0 counter fw-bold">${data.total_employees}</h3>
+                                        </div>
+                                        <div class="align-self-center text-center">
+                                            <i class="bi bi-person-badge-fill fs-1 text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress-widget">
+                                        <div class="progress sm-progress-bar progress-animate">
+                                            <div class="progress-gradient-primary" role="progressbar" style="width: 100%"
+                                                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                <span class="animate-circle"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                        // Designation Cards
+                        let colors = ['#9ace3e', '#7366ff', '#dc3545', '#ff7f50', '#28a745', '#007bff'];
+                        let icons = ['bi-person-workspace', 'bi-briefcase-fill', 'bi-person-gear', 'bi-award-fill'];
+                        let gradients = ['success', 'primary', 'danger', 'warning', 'info', 'dark'];
+                        
+                        data.designations.forEach((desig, index) => {
+                            let color = colors[index % colors.length];
+                            let icon = icons[index % icons.length];
+                            let grad = gradients[index % gradients.length];
+                            html += `
+                            <div class="col-sm-3 col-xl-3 col-lg-3">
+                                <div class="card o-hidden border shadow-sm">
+                                    <div class="card-body">
+                                        <div class="media static-widget">
+                                            <div class="media-body">
+                                                <h6 class="font-roboto fw-bold text-muted">${desig.name}</h6>
+                                                <h3 class="mb-0 counter fw-bold">${desig.count}</h3>
+                                            </div>
+                                            <div class="align-self-center text-center">
+                                                <i class="bi ${icon} fs-1" style="color: ${color};"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress-widget">
+                                            <div class="progress sm-progress-bar progress-animate">
+                                                <div class="progress-gradient-${grad}" role="progressbar" style="width: 100%"
+                                                    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="animate-circle"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+
+                        // Breakdown Section
+                        if (data.breakdown && data.breakdown.length > 0) {
+                            let heading = data.breakdown_type === 'wards' ? 'Ward-wise Breakdown' : 'Zone-wise Breakdown';
+                            html += `
+                            <div class="col-12 mt-4 mb-3">
+                                <h5 class="fw-bold border-bottom pb-2 text-dark d-flex align-items-center gap-2">
+                                    <i class="bi bi-geo-alt-fill text-danger"></i> ${heading}
+                                </h5>
+                            </div>`;
+                            
+                            data.breakdown.forEach((item, index) => {
+                                let color = colors[(index + 2) % colors.length];
+                                let grad = gradients[(index + 2) % gradients.length];
+                                html += `
+                                <div class="col-sm-3 col-xl-3 col-lg-3">
+                                    <div class="card o-hidden border shadow-sm">
+                                        <div class="card-body">
+                                            <div class="media static-widget">
+                                                <div class="media-body">
+                                                    <h6 class="font-roboto fw-bold text-muted text-truncate" title="${item.name}">${item.name}</h6>
+                                                    <h3 class="mb-0 counter fw-bold">${item.count}</h3>
+                                                </div>
+                                                <div class="align-self-center text-center">
+                                                    <i class="bi bi-map fs-1" style="color: ${color};"></i>
+                                                </div>
+                                            </div>
+                                            <div class="progress-widget">
+                                                <div class="progress sm-progress-bar progress-animate">
+                                                    <div class="progress-gradient-${grad}" role="progressbar" style="width: 100%"
+                                                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="animate-circle"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            });
+                        } else {
+                            html += `
+                            <div class="col-12 mt-4 text-center">
+                                <div class="alert alert-light border text-muted py-4 shadow-sm">
+                                    <i class="bi bi-info-circle fs-3 d-block mb-2 text-secondary"></i>
+                                    No records found matching the selected filters.
+                                </div>
+                            </div>`;
+                        }
+
+                        $('#statsWidgets').html(html);
+                    },
+                    error: function() {
+                        $('#statsWidgets').html(`
+                            <div class="col-12 text-center my-5">
+                                <div class="alert alert-danger d-inline-block" role="alert">
+                                    Failed to retrieve dashboard statistics. Please try refreshing.
+                                </div>
+                            </div>
+                        `);
+                    }
+                });
+            }
+
+            // Cascade dropdowns
+            $('#corporationSelect').change(function() {
+                let corpId = $(this).val();
+                $('#zoneSelect').html('<option value="">Loading Zones...</option>');
+                $('#wardSelect').html('<option value="">All Wards</option>');
+
+                $.ajax({
+                    url: "{{ route('dashboard') }}",
+                    type: 'GET',
+                    data: {
+                        get_type: 'zones',
+                        corporation_id: corpId
+                    },
+                    success: function(zones) {
+                        let html = '<option value="">All Zones</option>';
+                        zones.forEach(zone => {
+                            html += `<option value="${zone.id}">${zone.name}</option>`;
+                        });
+                        $('#zoneSelect').html(html);
+                        loadStats();
+                    }
+                });
+            });
+
+            $('#zoneSelect').change(function() {
+                let zoneId = $(this).val();
+                $('#wardSelect').html('<option value="">Loading Wards...</option>');
+
+                $.ajax({
+                    url: "{{ route('dashboard') }}",
+                    type: 'GET',
+                    data: {
+                        get_type: 'wards',
+                        zone_id: zoneId
+                    },
+                    success: function(wards) {
+                        let html = '<option value="">All Wards</option>';
+                        wards.forEach(ward => {
+                            let displayName = ward.name + (ward.number ? ` (Ward ${ward.number})` : '');
+                            html += `<option value="${ward.id}">${displayName}</option>`;
+                        });
+                        $('#wardSelect').html(html);
+                        loadStats();
+                    }
+                });
+            });
+
+            $('#wardSelect').change(function() {
+                loadStats();
+            });
+
+            // Initial load
+            // Populates zones first
+            $.ajax({
+                url: "{{ route('dashboard') }}",
+                type: 'GET',
+                data: {
+                    get_type: 'zones',
+                    corporation_id: $('#corporationSelect').val()
+                },
+                success: function(zones) {
+                    let html = '<option value="">All Zones</option>';
+                    zones.forEach(zone => {
+                        html += `<option value="${zone.id}">${zone.name}</option>`;
+                    });
+                    $('#zoneSelect').html(html);
+                    loadStats();
+                }
+            });
+        });
+    </script>
 @endsection

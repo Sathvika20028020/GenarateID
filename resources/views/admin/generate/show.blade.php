@@ -46,6 +46,11 @@
 <div class="container mt-1">
     <div class="card">
         <div class="card-body">
+            <div class="text-end mb-3">
+                <a href="{{ route('generate-id.download', $generateId) }}" class="btn btn-primary">
+                    <i class="bi bi-file-earmark-arrow-down me-1"></i> Download ID Card
+                </a>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered align-middle">
                     <tbody>
@@ -74,16 +79,28 @@
                             <td>{{$generateId->phone}}</td>
                         </tr>
                         <tr>
+                            <th>Address</th>
+                            <td>{{$generateId->address}}</td>
+                        </tr>
+                        <tr>
+                            <th>Blood Group</th>
+                            <td>{{$generateId->blood_group}}</td>
+                        </tr>
+                        <tr>
+                            <th>Valid Upto</th>
+                            <td>{{ $generateId->valid_upto ? \Illuminate\Support\Carbon::parse($generateId->valid_upto)->format('d/m/Y') : '-' }}</td>
+                        </tr>
+                        <tr>
                             <th>Department</th>
                             <td>{{$generateId->department?->name}}</td>
                         </tr>
                         <tr>
                             <th>Corporation</th>
-                            <td>{{$generateId->corporation?->name}}</td>
+                            <td>{{$generateId->ward?->zone?->corporation?->name ?? $generateId->corporation?->name}}</td>
                         </tr>
                         <tr>
                             <th>Zone</th>
-                            <td>{{$generateId->zone?->name}}</td>
+                            <td>{{$generateId->ward?->zone?->name ?? $generateId->zone?->name}}</td>
                         </tr>
                         <tr>
                             <th>Ward</th>
@@ -95,53 +112,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-(() => {
-    'use strict';
-
-    const form = document.getElementById('employeeForm');
-
-    form.addEventListener('submit', function(event) {
-
-        event.preventDefault();
-
-        if (!form.checkValidity()) {
-            event.stopPropagation();
-            form.classList.add('was-validated');
-            return;
-        }
-
-        // File size validation (2MB)
-        const fileInput = form.querySelector('input[type="file"]');
-        if (fileInput.files.length > 0) {
-            const fileSize = fileInput.files[0].size;
-            if (fileSize > 2097152) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'File Too Large',
-                    text: 'Photo must be less than 2MB'
-                });
-                return;
-            }
-        }
-
-        // SweetAlert Success Popup
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Employee ID Created Successfully',
-            confirmButtonColor: '#ff6a88'
-        }).then(() => {
-            form.reset();
-            form.classList.remove('was-validated');
-        });
-
-    }, false);
-
-})();
-</script>
 @endsection

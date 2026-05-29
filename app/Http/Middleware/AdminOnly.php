@@ -11,7 +11,9 @@ class AdminOnly
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->user()?->isAdmin()) {
-            abort(403);
+            return redirect()
+                ->route('generate-id.index')
+                ->with('error', 'You do not have permission to access that page.');
         }
 
         return $next($request);

@@ -39,14 +39,17 @@
                 <li class="profile-nav onhover-dropdown pe-0 py-0 me-0">
                     <div class="media profile-media">
                        
-                        <span  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout"><a
-                                href="#"><i data-feather="log-in"> </i><span><i class="bi bi-box-arrow-right fs-4"></i></span></a></span>
+                        <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout">
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i data-feather="log-in"> </i><span><i class="bi bi-box-arrow-right fs-4"></i></span>
+                            </a>
+                        </span>
                     </div>
                     
                 </li>
             </ul>
         </div>
-        <form id="logout-form" action="" method="POST" class="d-none">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
         </form>
         <script class="result-template" type="text/x-handlebars-template">

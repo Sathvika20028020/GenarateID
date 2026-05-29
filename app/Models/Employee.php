@@ -12,11 +12,19 @@ class Employee extends Model
         'department_id',
         'designation_id',
         'phone',
+        'address',
+        'blood_group',
+        'valid_upto',
         'image',
         'corporation_id',
         'zone_id',
         'ward_id',
         'status',
+    ];
+
+    protected $casts = [
+        'valid_upto' => 'date',
+        'status' => 'boolean',
     ];
 
     public function department(){

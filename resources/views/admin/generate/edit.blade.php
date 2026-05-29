@@ -138,11 +138,34 @@
                     <!-- Phone Number -->
                     <div class="col-md-6">
                         <label class="form-label">Phone Number</label>
-                        <input type="text" name="phone" value="{{$generateId->phone}}" class="form-control" value="9876543210" maxlength="10" pattern="\d{10}"
+                        <input type="text" name="phone" value="{{$generateId->phone}}" class="form-control" maxlength="10" pattern="\d{10}"
                             inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                         <div class="invalid-feedback">
                             Enter valid 10 digit phone number.
                         </div>
+                    </div>
+                    <!-- Address -->
+                    <div class="col-md-12">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="3" placeholder="Enter address" required>{{ old('address', $generateId->address) }}</textarea>
+                        <div class="invalid-feedback">
+                            Please enter address.
+                        </div>
+                    </div>
+                    <!-- Blood Group -->
+                    <div class="col-md-6">
+                        <label class="form-label">Blood Group</label>
+                        <select class="form-select" name="blood_group" required>
+                            <option value="">Select Blood Group</option>
+                            @foreach(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bloodGroup)
+                                <option value="{{ $bloodGroup }}" @selected(old('blood_group', $generateId->blood_group) === $bloodGroup)>{{ $bloodGroup }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Valid Upto -->
+                    <div class="col-md-6">
+                        <label class="form-label">Valid Upto</label>
+                        <input type="date" name="valid_upto" id="valid_upto" class="form-control" value="{{ old('valid_upto', $generateId->valid_upto ? \Illuminate\Support\Carbon::parse($generateId->valid_upto)->format('Y-m-d') : '') }}" required>
                     </div>
                     <!-- Department -->
                     <div class="col-md-6">

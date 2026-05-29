@@ -138,7 +138,7 @@
                   <td>{{$entry->phone}}</td>
                   <td>{{$entry->designation?->name}}</td>
                   <td>
-                    <a href="your-file.pdf" download class="download-btn">
+                    <a href="{{ route('generate-id.download', $entry) }}" class="download-btn" title="Download ID Card">
                       <i class="bi bi-file-earmark-arrow-down me-1 fs-4"></i>
                     </a>
                   </td>

@@ -18,6 +18,9 @@ Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::get('/bulkdownload', [EmployeeController::class, 'bulkDownloadPage'])->name('bulkdownload');
+    Route::get('/generate-id/bulk-download', [EmployeeController::class, 'bulkDownload'])->name('generate-id.bulk-download');
+    Route::get('/generate-id/{generateId}/download', [EmployeeController::class, 'download'])->name('generate-id.download');
     Route::resource('generate-id', EmployeeController::class);
 
     Route::group(['middleware' => ['admin']], function () {
@@ -48,34 +51,6 @@ Route::get('/clear-cache', function () {
   \Artisan::call('view:clear');
   echo 'All caches cleared successfully!';
 });
-
-
-
-
-// Route::get('/', function () {
-//     return view('admin.dashboard');
-// })->name('dashboard');
-
-
-
-
-
-Route::get('/genarateedit', function () {
-    return view('admin.generate.edit'); 
-})->name('genarateedit');
-
-
-
-Route::get('/genarateshow', function () {
-    return view('admin.generate.show'); 
-})->name('genarateshow');
-Route::get('/bulkdownload', function () {
-    return view('admin.generate.bulkdownload'); 
-})->name('bulkdownload');
-
-
-
-
 
 Route::get('/forgot', function () {
     return view('auth.forgot');
