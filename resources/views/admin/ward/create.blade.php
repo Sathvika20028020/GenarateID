@@ -106,51 +106,62 @@ input:checked+.slider:before {
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Ward Name<span class="text-danger">*</span> </label>
-                        <input type="text" name="name" class="form-control" placeholder="Enter Ward Name" required>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Ward Name" required>
                         <div class="invalid-feedback">
-                            Please enter ward name.
+                            @error('name') {{ $message }} @else Please enter ward name. @enderror
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Ward No<span class="text-danger">*</span> </label>
-                        <input type="number" name="number" class="form-control" placeholder="Enter Ward Number" required>
+                        <input type="number" name="number" value="{{ old('number') }}" class="form-control @error('number') is-invalid @enderror" placeholder="Enter Ward Number" required>
                         <div class="invalid-feedback">
-                            Please enter ward number.
+                            @error('number') {{ $message }} @else Please enter ward number. @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ward Name (Kannada)</label>
+                        <input type="text" name="name_kn" value="{{ old('name_kn') }}" class="form-control @error('name_kn') is-invalid @enderror" placeholder="Enter Kannada Ward Name">
+                        @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 <!-- Row 2 -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Corporation<span class="text-danger">*</span> </label>
-                        <select class="form-select" name="corporation_id" id="corporationSelect" required>
+                        <select class="form-select @error('corporation_id') is-invalid @enderror" name="corporation_id" id="corporationSelect" required>
                             <option value="">Select Corporation</option>
                                           @foreach($corporations as $corporation)
-                                          <option value="{{$corporation->id}}">{{$corporation->name}}</option>
+                                          <option value="{{$corporation->id}}" {{ old('corporation_id') == $corporation->id ? 'selected' : '' }}>{{$corporation->name}}</option>
                                           @endforeach
                         </select>
                         <div class="invalid-feedback">
-                            Please select corporation.
+                            @error('corporation_id') {{ $message }} @else Please select corporation. @enderror
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Zone<span class="text-danger">*</span> </label>
-                        <select class="form-select" name="zone_id" id="zoneSelect" required>
+                        <select class="form-select @error('zone_id') is-invalid @enderror" name="zone_id" id="zoneSelect" required>
                             <option value="">Select Zone</option>
+                            @foreach($zones as $zone)
+                            <option value="{{ $zone->id }}" data-corporation="{{ $zone->corporation_id }}" {{ old('zone_id') == $zone->id ? 'selected' : '' }}>{{ $zone->name }}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
-                            Please select zone.
+                            @error('zone_id') {{ $message }} @else Please select zone. @enderror
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Constituency<span class="text-danger">*</span> </label>
-                        <select class="form-select" name="constituency_id" id="consSelect" required>
+                        <select class="form-select @error('constituency_id') is-invalid @enderror" name="constituency_id" id="consSelect" required>
                             <option value="">Select Constituency</option>
+                            @foreach($constituencies as $constituency)
+                            <option value="{{ $constituency->id }}" data-zone="{{ $constituency->zone_id }}" {{ old('constituency_id') == $constituency->id ? 'selected' : '' }}>{{ $constituency->name }}</option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
-                            Please select zone.
+                            @error('constituency_id') {{ $message }} @else Please select constituency. @enderror
                         </div>
                     </div>
                 </div>

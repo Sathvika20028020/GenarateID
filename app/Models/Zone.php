@@ -11,4 +11,12 @@ class Zone extends Model
     public function corporation(){
       return $this->belongsTo(Corporation::class);
     }
+
+    public function constituencies(){
+      return $this->hasMany(Constituency::class);
+    }
+
+    public function wards(){
+      return $this->hasMany(Ward::class);
+    }
 }

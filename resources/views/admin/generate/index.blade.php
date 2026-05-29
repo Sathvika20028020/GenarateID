@@ -144,10 +144,7 @@
                   </td>
 
                   <td>
-                    <label class="switch">
-                      <input type="checkbox" {{$entry->status ? 'checked' : ''}}>
-                      <span class="slider"></span>
-                    </label>
+                    @include('admin.partials.status-toggle', ['checked' => $entry->status, 'disabled' => true])
                   </td>
                   <td>
                     <div class="d-flex gap-1">

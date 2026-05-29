@@ -15,4 +15,8 @@ class Constituency extends Model
   public function zone(){
     return $this->belongsTo(Zone::class);
   }
+
+  public function wards(){
+    return $this->hasMany(Ward::class);
+  }
 }

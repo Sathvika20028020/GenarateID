@@ -50,12 +50,16 @@
                 <table class="table table-bordered">
                     <tr>
                         <th>Corporation Name</th>
-                        <td>Corporation 1</td>
+                        <td>{{ $corporation->name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Corporation Name (Kannada)</th>
+                        <td>{{ $corporation->name_kn ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Status</th>
                         <td>
-                            <span class="badge bg-success">Active</span>
+                            <span class="badge bg-{{ $corporation->status ? 'success' : 'danger' }}">{{ $corporation->status ? 'Active' : 'Inactive' }}</span>
                         </td>
                     </tr>
                 </table>

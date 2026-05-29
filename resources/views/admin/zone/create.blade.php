@@ -106,22 +106,27 @@ input:checked+.slider:before {
                     <!-- Zone Name -->
                     <div class="col-md-6">
                         <label class="form-label">Zone Name<span class="text-danger">*</span> </label>
-                        <input type="text" class="form-control" name="name" placeholder="Enter Zone Name" required>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" placeholder="Enter Zone Name" required>
                         <div class="invalid-feedback">
-                            Please enter zone name.
+                            @error('name') {{ $message }} @else Please enter zone name. @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Zone Name (Kannada)</label>
+                        <input type="text" class="form-control @error('name_kn') is-invalid @enderror" name="name_kn" value="{{ old('name_kn') }}" placeholder="Enter Kannada Zone Name">
+                        @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <!-- Corporation Dropdown -->
                     <div class="col-md-6">
                         <label class="form-label">Corporation Name<span class="text-danger">*</span> </label>
-                        <select class="form-select" name="corporation_id" required>
+                        <select class="form-select @error('corporation_id') is-invalid @enderror" name="corporation_id" required>
                             <option value="">Select Corporation</option>
                                   @foreach($corporations as $corporation)
-                                  <option value="{{$corporation->id}}">{{$corporation->name}}</option>
+                                  <option value="{{$corporation->id}}" {{ old('corporation_id') == $corporation->id ? 'selected' : '' }}>{{$corporation->name}}</option>
                                   @endforeach
                         </select>
                         <div class="invalid-feedback">
-                            Please select corporation.
+                            @error('corporation_id') {{ $message }} @else Please select corporation. @enderror
                         </div>
                     </div>
                 </div>

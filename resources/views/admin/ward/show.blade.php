@@ -51,19 +51,31 @@
                     <tbody>
                         <tr>
                             <th style="width: 30%;">Ward Name</th>
-                            <td>Anna Nagar</td>
+                            <td>{{ $ward->name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ward Name (Kannada)</th>
+                            <td>{{ $ward->name_kn ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Ward No</th>
-                            <td>1</td>
+                            <td>{{ $ward->number }}</td>
                         </tr>
                         <tr>
                             <th>Zone</th>
-                            <td>Zone 1</td>
+                            <td>{{ $ward->zone?->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Constituency</th>
+                            <td>{{ $ward->constituency?->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Corporation</th>
-                            <td>Corporation 1</td>
+                            <td>{{ $ward->corporation?->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="badge bg-{{ $ward->status ? 'success' : 'danger' }}">{{ $ward->status ? 'Active' : 'Inactive' }}</span></td>
                         </tr>
                     </tbody>
                 </table>

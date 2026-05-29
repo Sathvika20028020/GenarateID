@@ -66,6 +66,21 @@ class DesignationController extends Controller
         return redirect()->route('designation.index');
     }
 
+    public function toggleStatus(Request $request, Designation $designation)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $designation->update(['status' => (bool) $validated['status']]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $designation->status,
+            'message' => $designation->status ? 'Designation activated successfully.' : 'Designation deactivated successfully.',
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

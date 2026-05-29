@@ -117,11 +117,28 @@ input:checked+.slider:before {
                                     <td>{{$entry->name}}</td>
                                     <td>{{$entry->name_kn}}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-{{ $entry->status ? 'success' : 'danger' }}">{{ $entry->status ? 'Active' : 'Inactive' }}</span>
+                                        @include('admin.partials.status-toggle', [
+                                            'checked' => $entry->status,
+                                            'class' => 'js-status-toggle',
+                                            'url' => route('constituency.toggle-status', $entry),
+                                        ])
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('constituency.edit', $entry->id) }}" class="btn btn-sm btn-warning me-1 px-2">Edit</a>
-                                        <a href="" class="btn btn-sm btn-danger px-2">Delete</a>
+                                        <div class="d-flex gap-1 justify-content-center">
+                                            <a href="{{ route('constituency.edit', $entry) }}" class="btn btn-sm btn-primary" title="Edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <a href="{{ route('constituency.show', $entry) }}" class="btn btn-sm btn-info text-white" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <form action="{{ route('constituency.destroy', $entry) }}" method="post" onsubmit="return confirm('Delete this constituency?');">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                  @endforeach
@@ -143,6 +160,14 @@ input:checked+.slider:before {
             icon: "success",
             title: "Success!",
             text: "{{session('success')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
+  @if(session()->has('error'))
+        Swal.fire({
+            icon: "error",
+            title: "Cannot Delete",
+            text: "{{session('error')}}",
             confirmButtonColor: "#ff6a88"
         });
     @endif
@@ -168,4 +193,5 @@ function openEditPage(button) {
     window.location.href = url;
 }
 </script>
+@include('admin.partials.status-toggle-script')
 @endsection

@@ -15,7 +15,7 @@ class WardController extends Controller
      */
     public function index()
     {
-      $entries = Ward::with('corporation','zone','constituency')->get();
+      $entries = Ward::with('corporation','zone','constituency')->latest()->get();
         return view('admin.ward.index', compact('entries'));
     }
 
@@ -42,8 +42,7 @@ class WardController extends Controller
             $list = Constituency::select('id', 'name', 'name_kn')->where('zone_id', $request->id)->get();
           return response()->json(['success' => true, 'list' => $list]);
         }
-        $data = $request->except('_token');
-        Ward::create($data);
+        Ward::create($this->validatedData($request, true));
         \Session::flash('success', 'Ward added successfully!');
         return redirect()->route('ward.index');
     }
@@ -53,6 +52,7 @@ class WardController extends Controller
      */
     public function show(Ward $ward)
     {
+        $ward->load('corporation','zone','constituency');
         return view('admin.ward.show', compact('ward'));
     }
 
@@ -62,8 +62,8 @@ class WardController extends Controller
     public function edit(Ward $ward)
     {
       $corporations = Corporation::get();
-      $zones = Zone::get();
-      $constituencies = Constituency::get();
+      $zones = Zone::where('corporation_id', $ward->corporation_id)->get();
+      $constituencies = Constituency::where('zone_id', $ward->zone_id)->get();
         return view('admin.ward.edit', compact('ward', 'corporations', 'zones','constituencies'));
     }
 
@@ -72,10 +72,24 @@ class WardController extends Controller
      */
     public function update(Request $request, Ward $ward)
     {
-        $data = $request->except('_token', '_method');
-        $ward->update($data);
+        $ward->update($this->validatedData($request, false));
         \Session::flash('success', 'Ward updated successfully!');
         return redirect()->route('ward.index');
+    }
+
+    public function toggleStatus(Request $request, Ward $ward)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $ward->update(['status' => (bool) $validated['status']]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $ward->status,
+            'message' => $ward->status ? 'Ward activated successfully.' : 'Ward deactivated successfully.',
+        ]);
     }
 
     /**
@@ -83,6 +97,25 @@ class WardController extends Controller
      */
     public function destroy(Ward $ward)
     {
-        //
+        $ward->delete();
+        \Session::flash('success', 'Ward deleted successfully!');
+        return redirect()->route('ward.index');
+    }
+
+    private function validatedData(Request $request, bool $defaultStatus): array
+    {
+        $validated = $request->validate([
+            'corporation_id' => ['required', 'exists:corporations,id'],
+            'zone_id' => ['required', 'exists:zones,id'],
+            'constituency_id' => ['required', 'exists:constituencies,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'name_kn' => ['nullable', 'string', 'max:255'],
+            'number' => ['required', 'string', 'max:50'],
+            'status' => ['nullable', 'boolean'],
+        ]);
+
+        $validated['status'] = $request->has('status') ? $request->boolean('status') : $defaultStatus;
+
+        return $validated;
     }
 }

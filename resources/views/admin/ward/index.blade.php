@@ -132,19 +132,27 @@ input:checked+.slider:before {
                                     <td>{{$entry->zone?->name}}</td>
                                     <td>{{$entry->corporation?->name}}</td>
                                     <td>
-                                        <label class="switch">
-                                            <input type="checkbox" {{ $entry->status ? 'checked' : ''}}>
-                                            <span class="slider"></span>
-                                        </label>
+                                        @include('admin.partials.status-toggle', [
+                                            'checked' => $entry->status,
+                                            'class' => 'js-status-toggle',
+                                            'url' => route('ward.toggle-status', $entry),
+                                        ])
                                     </td>
                                     <td>
-                                        <div class="d-flex gap-1">
+                                        <div class="d-flex gap-1 justify-content-center">
                                             <a href="{{ route('ward.edit', $entry->id) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                             <a href="{{ route('ward.show', $entry->id) }}" class="btn btn-sm btn-info text-white" title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+                                            <form action="{{ route('ward.destroy', $entry) }}" method="post" onsubmit="return confirm('Delete this ward?');">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -171,4 +179,5 @@ input:checked+.slider:before {
         });
     @endif
  </script>
+ @include('admin.partials.status-toggle-script')
 @endsection

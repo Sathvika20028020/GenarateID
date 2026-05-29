@@ -124,18 +124,34 @@ input:checked+.slider:before {
                     <!-- Password -->
                     <div class="col-md-6">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" >
+                        <input type="password" class="form-control" name="password">
                         <div class="invalid-feedback">Please enter password.</div>
                     </div>
                     <!-- Ward Selection -->
                     <div class="col-md-6">
                         <label class="form-label">Ward Selection</label>
-                        <select class="form-select" name="wards[]" multiple required>
-                            <option value="">Select Ward</option>
+                        <select class="form-select" name="ward_ids[]" multiple>
                             @foreach($wards as $ward)
-                              <option value="{{$ward->id}}" {{ in_array($ward->id, $user->wards) ? 'selected' : '' }}>{{$ward->name}} - Ward {{$ward->number}}</option>
+                              <option value="{{$ward->id}}" {{ in_array($ward->id, $user->wardIds()) ? 'selected' : '' }}>{{$ward->name}} - Ward {{$ward->number}}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department Selection</label>
+                        <select class="form-select" name="department_ids[]" multiple required>
+                            @foreach($departments as $department)
+                              <option value="{{$department->id}}" {{ in_array($department->id, $user->departmentIds()) ? 'selected' : '' }}>{{$department->name}}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback">Please select at least one department.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <br>
+                        <label class="switch">
+                            <input type="checkbox" name="status" value="1" {{ $user->status ? 'checked' : '' }}>
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
                 <div class="text-center mt-4">

@@ -100,14 +100,20 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="corporationForm" class="needs-validation" novalidate>
+            <form id="corporationForm" class="needs-validation" novalidate action="{{ route('corporation.store') }}" method="post">
+                @csrf
                 <!-- Corporation Name -->
                 <div class="mb-3">
                     <label class="form-label">Corporation Name <span class="text-danger">*</span> </label>
-                    <input type="text" class="form-control" placeholder="Enter Corporation Name" required>
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Corporation Name" required>
                     <div class="invalid-feedback">
-                        Please enter Corporation name.
+                        @error('name') {{ $message }} @else Please enter Corporation name. @enderror
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Corporation Name (Kannada)</label>
+                    <input type="text" name="name_kn" value="{{ old('name_kn') }}" class="form-control @error('name_kn') is-invalid @enderror" placeholder="Enter Kannada Name">
+                    @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <!-- Submit Button -->
                 <div class="text-center mt-3">
@@ -129,24 +135,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("corporationForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
         if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
-
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Corporation added successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
-
     });
 
 });

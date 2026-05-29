@@ -14,20 +14,31 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Auth::routes();
+Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
-    Route::resources([
-      'corporation'                     => CorporationController::class,
-      'zone'                            => ZoneController::class,
-      'constituency'                    => ConstituencyController::class,
-      'ward'                            => WardController::class,
-      'user'                            => UserController::class,
-      'department'                      => DepartmentController::class,
-      'designation'                     => DesignationController::class,
-      'generate-id'                     => EmployeeController::class,
-    ]);
+    Route::resource('generate-id', EmployeeController::class);
+
+    Route::group(['middleware' => ['admin']], function () {
+      Route::patch('user/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggle-status');
+      Route::patch('corporation/{corporation}/toggle-status', [CorporationController::class, 'toggleStatus'])->name('corporation.toggle-status');
+      Route::patch('zone/{zone}/toggle-status', [ZoneController::class, 'toggleStatus'])->name('zone.toggle-status');
+      Route::patch('constituency/{constituency}/toggle-status', [ConstituencyController::class, 'toggleStatus'])->name('constituency.toggle-status');
+      Route::patch('ward/{ward}/toggle-status', [WardController::class, 'toggleStatus'])->name('ward.toggle-status');
+      Route::patch('department/{department}/toggle-status', [DepartmentController::class, 'toggleStatus'])->name('department.toggle-status');
+      Route::patch('designation/{designation}/toggle-status', [DesignationController::class, 'toggleStatus'])->name('designation.toggle-status');
+
+      Route::resources([
+        'corporation'                     => CorporationController::class,
+        'zone'                            => ZoneController::class,
+        'constituency'                    => ConstituencyController::class,
+        'ward'                            => WardController::class,
+        'user'                            => UserController::class,
+        'department'                      => DepartmentController::class,
+        'designation'                     => DesignationController::class,
+      ]);
+    });
 });
 
 Route::get('/clear-cache', function () {

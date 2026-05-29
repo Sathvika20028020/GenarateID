@@ -38,6 +38,7 @@
                     </li>
 
 
+                    @if(auth()->user()?->isAdmin())
                     <li class="sidebar-list">
                         <a class="sidebar-link sidebar-title d-flex flex-row gap-2" href="#">
                             <span><i class="bi bi-gear-fill"></i></span>
@@ -95,6 +96,7 @@
 
                         </ul>
                     </li>
+                    @endif
                 </ul>
 
             </div>

@@ -106,23 +106,36 @@ input:checked+.slider:before {
                     <!-- Ward / Zone Name -->
                     <div class="col-md-6">
                         <label class="form-label">Zone Name</label>
-                        <input type="text" class="form-control" value="{{$zone->name}}" name="name" placeholder="Enter Zone Name" required>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $zone->name) }}" name="name" placeholder="Enter Zone Name" required>
                         <div class="invalid-feedback">
-                            Please enter zone name.
+                            @error('name') {{ $message }} @else Please enter zone name. @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Zone Name (Kannada)</label>
+                        <input type="text" class="form-control @error('name_kn') is-invalid @enderror" value="{{ old('name_kn', $zone->name_kn) }}" name="name_kn" placeholder="Enter Kannada Zone Name">
+                        @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <!-- Corporation Dropdown -->
                     <div class="col-md-6">
                         <label class="form-label">Corporation Name</label>
-                        <select class="form-select" name="corporation_id" required>
+                        <select class="form-select @error('corporation_id') is-invalid @enderror" name="corporation_id" required>
                             <option value="">Select Corporation</option>
                                   @foreach($corporations as $corporation)
-                                  <option value="{{$corporation->id}}" {{$corporation->id == $zone->corporation_id ? 'selected' : ''}}>{{$corporation->name}}</option>
+                                  <option value="{{$corporation->id}}" {{ old('corporation_id', $zone->corporation_id) == $corporation->id ? 'selected' : ''}}>{{$corporation->name}}</option>
                                   @endforeach
                         </select>
                         <div class="invalid-feedback">
-                            Please select corporation.
+                            @error('corporation_id') {{ $message }} @else Please select corporation. @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <br>
+                        <label class="switch">
+                            <input type="checkbox" name="status" value="1" {{ old('status', $zone->status) ? 'checked' : '' }}>
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
                 <!-- Update Button -->

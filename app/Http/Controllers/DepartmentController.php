@@ -62,6 +62,21 @@ class DepartmentController extends Controller
         return redirect()->route('department.index');
     }
 
+    public function toggleStatus(Request $request, Department $department)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $department->update(['status' => (bool) $validated['status']]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $department->status,
+            'message' => $department->status ? 'Department activated successfully.' : 'Department deactivated successfully.',
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

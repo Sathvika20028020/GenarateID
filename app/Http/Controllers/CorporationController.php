@@ -12,7 +12,7 @@ class CorporationController extends Controller
      */
     public function index()
     {
-      $entries = Corporation::get();
+      $entries = Corporation::latest()->get();
         return view('admin.corporation.index', compact('entries'));
     }
 
@@ -29,8 +29,7 @@ class CorporationController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except('_token');
-        Corporation::create($data);
+        Corporation::create($this->validatedData($request, true));
         \Session::flash('success', 'Corporation added successfully!');
         return redirect()->route('corporation.index');
     }
@@ -56,10 +55,24 @@ class CorporationController extends Controller
      */
     public function update(Request $request, Corporation $corporation)
     {
-        $data = $request->except('_token', '_method');
-        $corporation->update($data);
+        $corporation->update($this->validatedData($request, false));
         \Session::flash('success', 'Corporation updated successfully!');
         return redirect()->route('corporation.index');
+    }
+
+    public function toggleStatus(Request $request, Corporation $corporation)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $corporation->update(['status' => (bool) $validated['status']]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $corporation->status,
+            'message' => $corporation->status ? 'Corporation activated successfully.' : 'Corporation deactivated successfully.',
+        ]);
     }
 
     /**
@@ -67,6 +80,26 @@ class CorporationController extends Controller
      */
     public function destroy(Corporation $corporation)
     {
-        //
+        if ($corporation->zones()->exists() || $corporation->constituencies()->exists() || $corporation->wards()->exists()) {
+            return redirect()->route('corporation.index')
+                ->with('error', 'Corporation cannot be deleted because it has zones, constituencies, or wards.');
+        }
+
+        $corporation->delete();
+        \Session::flash('success', 'Corporation deleted successfully!');
+        return redirect()->route('corporation.index');
+    }
+
+    private function validatedData(Request $request, bool $defaultStatus): array
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'name_kn' => ['nullable', 'string', 'max:255'],
+            'status' => ['nullable', 'boolean'],
+        ]);
+
+        $validated['status'] = $request->has('status') ? $request->boolean('status') : $defaultStatus;
+
+        return $validated;
     }
 }

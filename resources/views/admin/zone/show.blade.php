@@ -55,6 +55,10 @@
                             <td>{{$zone->name}}</td>
                         </tr>
                         <tr>
+                            <th>Zone Name (Kannada)</th>
+                            <td>{{ $zone->name_kn ?? '-' }}</td>
+                        </tr>
+                        <tr>
                             <th>Corporation</th>
                             <td>{{$zone->corporation?->name}}</td>
                         </tr>

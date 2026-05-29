@@ -13,6 +13,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE_ADMIN = 1;
+    public const ROLE_DEPARTMENT_USER = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -50,7 +53,37 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'integer',
+            'status' => 'boolean',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isDepartmentUser(): bool
+    {
+        return $this->role === self::ROLE_DEPARTMENT_USER;
+    }
+
+    public function departmentIds(): array
+    {
+        if (!$this->department_ids) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('intval', explode(',', $this->department_ids))));
+    }
+
+    public function wardIds(): array
+    {
+        if (!$this->ward_ids) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map('intval', explode(',', $this->ward_ids))));
     }
 
     public function getWardNamesAttribute()

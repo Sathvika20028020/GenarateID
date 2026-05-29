@@ -1,4 +1,6 @@
 @extends('admin.layout.app')
+@section('title') Create Constituency @endsection
+@section('style')
 <style>
    .form-section {
       background: #fff;
@@ -39,6 +41,7 @@
       background-color: #e9ecef;
     }
 </style>
+@endsection
 @section('content')
   <div class="container-fluid">
       <div class="page-title">
@@ -48,74 +51,65 @@
               </div>
               <div class="col-12 col-sm-6">
                   <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="index.html">
-                              <i data-feather="home"></i></a></li>
-
+                      <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="home"></i></a></li>
                       <li class="breadcrumb-item active">Create Constituency</li>
                   </ol>
               </div>
           </div>
       </div>
   </div>
-  <!-- Container-fluid starts-->
  <div class="container-fluid">
     <div class="form-section">
       <form id="constituencyForm" class="needs-validation" novalidate action="{{ route('constituency.store') }}" method="post">
-                          @csrf
+        @csrf
         <div class="row g-4">
-
-          <!-- Select Corporation -->
           <div class="col-md-6">
-            <label class="form-label">Select Corporation</label>
-            <select class="form-select" id="corporationSelect" name="corporation_id" required>
+            <label class="form-label">Select Corporation <span class="text-danger">*</span></label>
+            <select class="form-select @error('corporation_id') is-invalid @enderror" id="corporationSelect" name="corporation_id" required>
               <option value="">Choose Corporation</option>
               @foreach($corporations as $corporation)
-              <option value="{{$corporation->id}}" data-kan="{{$corporation->name_kn}}">{{$corporation->name}}</option>
+              <option value="{{ $corporation->id }}" data-kan="{{ $corporation->name_kn }}" {{ old('corporation_id') == $corporation->id ? 'selected' : '' }}>{{ $corporation->name }}</option>
               @endforeach
             </select>
-            <div class="invalid-feedback">Please select a corporation.</div>
+            <div class="invalid-feedback">@error('corporation_id') {{ $message }} @else Please select a corporation. @enderror</div>
           </div>
 
-          <!-- Corporation Kannada -->
           <div class="col-md-6">
             <label class="form-label">Corporation Name (Kannada)</label>
             <input type="text" class="form-control readonly-box" id="corporationKan" readonly>
           </div>
 
-          <!-- Select Zone -->
           <div class="col-md-6">
-            <label class="form-label">Select Zone</label>
-            <select class="form-select" name="zone_id" id="zoneSelect" required>
+            <label class="form-label">Select Zone <span class="text-danger">*</span></label>
+            <select class="form-select @error('zone_id') is-invalid @enderror" name="zone_id" id="zoneSelect" required>
               <option value="">Choose Zone</option>
+              @foreach($zones as $zone)
+              <option value="{{ $zone->id }}" data-kan="{{ $zone->name_kn }}" data-corporation="{{ $zone->corporation_id }}" {{ old('zone_id') == $zone->id ? 'selected' : '' }}>{{ $zone->name }}</option>
+              @endforeach
             </select>
-            <div class="invalid-feedback">Please select a zone.</div>
+            <div class="invalid-feedback">@error('zone_id') {{ $message }} @else Please select a zone. @enderror</div>
           </div>
 
-          <!-- Zone Kannada -->
           <div class="col-md-6">
             <label class="form-label">Zone Name (Kannada)</label>
             <input type="text" class="form-control readonly-box" id="zoneKan" readonly>
           </div>
 
-          <!-- Constituency English -->
           <div class="col-md-6">
-            <label class="form-label">Constituency Name (English)</label>
-            <input type="text" name="name" class="form-control" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
-            <div class="invalid-feedback">Please enter constituency name in English.</div>
+            <label class="form-label">Constituency Name (English) <span class="text-danger">*</span></label>
+            <input type="text" name="name" value="{{ old('name') }}" class="form-control @error('name') is-invalid @enderror" id="constituencyEng" placeholder="Enter Constituency Name in English" required>
+            <div class="invalid-feedback">@error('name') {{ $message }} @else Please enter constituency name in English. @enderror</div>
           </div>
 
-          <!-- Constituency Kannada -->
           <div class="col-md-6">
             <label class="form-label">Constituency Name (Kannada)</label>
-            <input type="text" name="name_kn" class="form-control" id="constituencyKan" placeholder="Enter Constituency Name in Kannada" required>
-            <div class="invalid-feedback">Please enter constituency name in Kannada.</div>
+            <input type="text" name="name_kn" value="{{ old('name_kn') }}" class="form-control @error('name_kn') is-invalid @enderror" id="constituencyKan" placeholder="Enter Constituency Name in Kannada">
+            @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <!-- Submit -->
           <div class="col-12 text-center mt-4">
             <button type="submit" class="btn btn-submit">Submit</button>
           </div>
-
         </div>
       </form>
     </div>
@@ -123,89 +117,41 @@
 @endsection
 
 @section('script')
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    // Auto-fill Kannada fields
-    document.getElementById("corporationSelect").addEventListener("change", function () {
-      const selected = this.options[this.selectedIndex];
-      document.getElementById("corporationKan").value = selected.getAttribute("data-kan") || "";
-      const selectedValue = this.value;
-      $.ajax({
-        method: "POST",
-        url: "{{ route('ward.store') }}",
-        data: {_token: "{{csrf_token()}}", id: selectedValue, list: 'zones'}, 
-      })
-      .done(function (res) {
-        if(res.success){
-          var options = '';
-          $.each(res.list, function(key, value){
-              options += '<option value="' + value.id + '" data-kan="' + (value.name_kn??'') + '">' + value.name + '</option>';
-          });
-          options = '<option value="">Choose Zone</option>' + options;
-          
-          $('#zoneSelect').html(options);
-        }
-      })
-      .fail(function (err) {
-        console.log(err);              
+  <script>
+    function syncLocationFields() {
+      const corporation = document.getElementById("corporationSelect");
+      const zone = document.getElementById("zoneSelect");
+      const corporationId = corporation.value;
+
+      document.getElementById("corporationKan").value = corporation.options[corporation.selectedIndex]?.getAttribute("data-kan") || "";
+
+      [...zone.options].forEach((option) => {
+        if (!option.value) return;
+        option.hidden = corporationId && option.getAttribute("data-corporation") !== corporationId;
       });
-    });
 
-    document.getElementById("zoneSelect").addEventListener("change", function () {
-      const selected = this.options[this.selectedIndex];
-      document.getElementById("zoneKan").value = selected.getAttribute("data-kan") || "";
-    });
+      const selectedZone = zone.options[zone.selectedIndex];
+      if (selectedZone && selectedZone.hidden) {
+        zone.value = "";
+      }
 
-    // Bootstrap validation + SweetAlert + Refresh
+      document.getElementById("zoneKan").value = zone.options[zone.selectedIndex]?.getAttribute("data-kan") || "";
+    }
+
+    document.getElementById("corporationSelect").addEventListener("change", syncLocationFields);
+    document.getElementById("zoneSelect").addEventListener("change", syncLocationFields);
+    syncLocationFields();
+
     (() => {
       'use strict';
-
       const form = document.getElementById('constituencyForm');
-
       form.addEventListener('submit', function (event) {
-
         if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
           form.classList.add('was-validated');
-          return;
-        }else form.submit(); vdrdv
-
-        // Success alert
-        // Swal.fire({vchtdrrdrdgr cvdrerde´˳
-        //   icon: 'success',
-        //   title: 'Submitted Successfully!',
-        //   text: 'Your constituency details have been saved.',
-        //   confirmButtonColor: '#6c63ff',
-        //   confirmButtonText: 'OK'
-        // }).then((result) => {
-        //   if (result.isConfirmed) {
-        //     // Refresh page after OK
-        //     location.reload();
-        //   }
-        // });
+        }
       }, false);
     })();
   </script>
-
-  <script>
-
-         const zoneMap = {
-            @foreach($zones as $zone)
-              "{{$zone->id}}": "{{$zone->name_kn}}",
-            @endforeach
-        };
-
-        document.getElementById("zoneSelect").addEventListener("change", function () {
-            const selectedValue = this.value;
-            const kannadaInput = document.getElementById("Zone_name_kn");
-
-            if (zoneMap[selectedValue]) {
-                kannadaInput.value = zoneMap[selectedValue];
-            } else {
-                kannadaInput.value = "";
-            }
-        });
-    </script>
 @endsection

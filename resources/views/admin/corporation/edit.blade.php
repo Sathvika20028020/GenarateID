@@ -100,22 +100,29 @@ input:checked+.slider:before {
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form id="corporationForm" class="needs-validation" novalidate>
+            <form id="corporationForm" class="needs-validation" novalidate action="{{ route('corporation.update', $corporation) }}" method="post">
+                @csrf
+                @method('put')
 
                 <!-- Corporation Name -->
                 <div class="mb-3">
                     <label class="form-label">Corporation Name</label>
-                    <input type="text" class="form-control" value="Corporation 1" required>
+                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $corporation->name) }}" required>
                     <div class="invalid-feedback">
-                        Please enter corporation name.
+                        @error('name') {{ $message }} @else Please enter corporation name. @enderror
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Corporation Name (Kannada)</label>
+                    <input type="text" name="name_kn" class="form-control @error('name_kn') is-invalid @enderror" value="{{ old('name_kn', $corporation->name_kn) }}">
+                    @error('name_kn')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <!-- Status -->
                 <div class="mb-3">
                     <label class="form-label">Status</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" name="status" value="1" {{ old('status', $corporation->status) ? 'checked' : '' }}>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -139,24 +146,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("corporationForm");
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
         if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
             form.classList.add("was-validated");
             return;
         }
-
-        Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Corporation added successfully!",
-            confirmButtonColor: "#ff6a88"
-        }).then(() => {
-            form.reset();
-            form.classList.remove("was-validated");
-        });
-
     });
 
 });

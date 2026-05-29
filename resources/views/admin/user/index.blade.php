@@ -132,10 +132,11 @@ input:checked+.slider:before {
                                     <td>{{$entry->phone}}</td>
                                     <td>{{$entry->ward_names}}</td>
                                     <td>
-                                        <label class="switch">
-                                            <input type="checkbox" {{ $entry->status ? 'checked' : ''}}>
-                                            <span class="slider"></span>
-                                        </label>
+                                        @include('admin.partials.status-toggle', [
+                                            'checked' => $entry->status,
+                                            'class' => 'js-status-toggle',
+                                            'url' => route('user.toggle-status', $entry),
+                                        ])
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
@@ -171,4 +172,5 @@ input:checked+.slider:before {
         });
     @endif
  </script>
+ @include('admin.partials.status-toggle-script')
 @endsection

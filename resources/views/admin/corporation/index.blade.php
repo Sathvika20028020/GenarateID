@@ -120,48 +120,37 @@ input:checked+.slider:before {
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($entries as $entry)
                                 <tr>
-                                    <td>01</td>
-                                    <td>BSWML</td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $entry->name }}</td>
                                     <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
+                                        @include('admin.partials.status-toggle', [
+                                            'checked' => $entry->status,
+                                            'class' => 'js-status-toggle',
+                                            'url' => route('corporation.toggle-status', $entry),
+                                        ])
                                     </td>
                                     <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('corporation.edit', 1) }}" class="btn btn-sm btn-primary" title="Edit">
+                                        <div class="d-flex gap-1 justify-content-center">
+                                            <a href="{{ route('corporation.edit', $entry) }}" class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('corporation.show', 1) }}" class="btn btn-sm btn-info text-white"
+                                            <a href="{{ route('corporation.show', $entry) }}" class="btn btn-sm btn-info text-white"
                                                 title="View">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+                                            <form action="{{ route('corporation.destroy', $entry) }}" method="post" onsubmit="return confirm('Delete this corporation?');">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>02</td>
-                                    <td>BSWML</td>
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('corporation.edit', 2) }}" class="btn btn-sm btn-primary" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <a href="{{ route('corporation.show', 2) }}" class="btn btn-sm btn-info text-white"
-                                                title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -183,5 +172,14 @@ input:checked+.slider:before {
             confirmButtonColor: "#ff6a88"
         });
     @endif
+  @if(session()->has('error'))
+        Swal.fire({
+            icon: "error",
+            title: "Cannot Delete",
+            text: "{{session('error')}}",
+            confirmButtonColor: "#ff6a88"
+        });
+    @endif
  </script>
+ @include('admin.partials.status-toggle-script')
 @endsection
