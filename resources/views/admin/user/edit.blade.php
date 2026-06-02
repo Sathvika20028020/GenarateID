@@ -130,19 +130,25 @@ input:checked+.slider:before {
                     <!-- Ward Selection -->
                     <div class="col-md-6">
                         <label class="form-label">Ward Selection</label>
-                        <select class="form-select" name="ward_ids[]" multiple>
+                        <select class="form-select" id="wardSelect">
+                            <option value="">Select Ward</option>
                             @foreach($wards as $ward)
-                              <option value="{{$ward->id}}" {{ in_array($ward->id, $user->wardIds()) ? 'selected' : '' }}>{{$ward->name}} - Ward {{$ward->number}}</option>
+                              <option value="{{$ward->id}}" {{$ward->id}}>{{$ward->name}} - Ward {{$ward->number}}</option>
                             @endforeach
                         </select>
+                        <div id="wardBadges" class="mt-2"></div>
+                        <input type="hidden" id="ward_ids" name="ward_ids[]" value="{{implode(',', $user->wardIds())}}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Department Selection</label>
-                        <select class="form-select" name="department_ids[]" multiple required>
+                        <select class="form-select" id="departmentSelect" required>
+                            <option value="">Select Department</option>
                             @foreach($departments as $department)
-                              <option value="{{$department->id}}" {{ in_array($department->id, $user->departmentIds()) ? 'selected' : '' }}>{{$department->name}}</option>
+                              <option value="{{$department->id}}" {{$department->id}}>{{$department->name}}</option>
                             @endforeach
                         </select>
+                        <div id="departmentBadges" class="mt-2"></div>
+                        <input type="hidden" id="department_ids" name="department_ids[]" value="{{implode(',', $user->departmentIds())}}">
                         <div class="invalid-feedback">Please select at least one department.</div>
                     </div>
                     <div class="col-md-6">
@@ -194,5 +200,158 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+</script>
+
+<script>
+/* ---------------- WARD MULTI SELECT ---------------- */
+
+const wardSelect = document.getElementById('wardSelect');
+const wardBadges = document.getElementById('wardBadges');
+
+let selectedWards = [];
+
+// Initialize selected wards from hidden input
+function initializeWards() {
+    const wardIdsInput = document.getElementById('ward_ids').value;
+    if (wardIdsInput) {
+        const wardIds = wardIdsInput.split(',').filter(id => id);
+        wardIds.forEach(id => {
+            const option = wardSelect.querySelector(`option[value="${id}"]`);
+            if (option) {
+                selectedWards.push({ value: id, text: option.text });
+            }
+        });
+        renderWardBadges();
+    }
+}
+
+function renderWardBadges() {
+
+    wardBadges.innerHTML = '';
+
+    Array.from(wardSelect.options).forEach(opt => {
+        opt.style.backgroundColor = '';
+        opt.style.color = '';
+    });
+
+    selectedWards.forEach((ward, index) => {
+
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-primary me-1';
+        badge.style.cursor = 'pointer';
+
+        badge.innerHTML = `${ward.text} <span data-index="${index}">&times;</span>`;
+
+        badge.querySelector('span').addEventListener('click', function() {
+            const idx = this.getAttribute('data-index');
+            selectedWards.splice(idx, 1);
+            renderWardBadges();
+        });
+
+        wardBadges.appendChild(badge);
+
+        Array.from(wardSelect.options).forEach(opt => {
+            if (opt.value === ward.value) {
+                opt.style.backgroundColor = '#6362e7';
+                opt.style.color = '#ffffff';
+            }
+        });
+
+    });
+
+    document.getElementById('ward_ids').value =
+        selectedWards.map(w => w.value).join(',');
+}
+
+wardSelect.addEventListener('change', function() {
+
+    const value = wardSelect.value;
+    const text = wardSelect.selectedOptions[0].text;
+
+    if (value && !selectedWards.some(w => w.value === value)) {
+        selectedWards.push({ value, text });
+        renderWardBadges();
+    }
+
+    wardSelect.value = '';
+});
+
+initializeWards();
+
+
+/* ---------------- DEPARTMENT MULTI SELECT ---------------- */
+
+const departmentSelect = document.getElementById('departmentSelect');
+const departmentBadges = document.getElementById('departmentBadges');
+
+let selectedDepartments = [];
+
+// Initialize selected departments from hidden input
+function initializeDepartments() {
+    const deptIdsInput = document.getElementById('department_ids').value;
+    if (deptIdsInput) {
+        const deptIds = deptIdsInput.split(',').filter(id => id);
+        deptIds.forEach(id => {
+            const option = departmentSelect.querySelector(`option[value="${id}"]`);
+            if (option) {
+                selectedDepartments.push({ value: id, text: option.text });
+            }
+        });
+        renderDepartmentBadges();
+    }
+}
+
+function renderDepartmentBadges() {
+
+    departmentBadges.innerHTML = '';
+
+    Array.from(departmentSelect.options).forEach(opt => {
+        opt.style.backgroundColor = '';
+        opt.style.color = '';
+    });
+
+    selectedDepartments.forEach((dept, index) => {
+
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-success me-1';
+        badge.style.cursor = 'pointer';
+
+        badge.innerHTML = `${dept.text} <span data-index="${index}">&times;</span>`;
+
+        badge.querySelector('span').addEventListener('click', function() {
+            const idx = this.getAttribute('data-index');
+            selectedDepartments.splice(idx, 1);
+            renderDepartmentBadges();
+        });
+
+        departmentBadges.appendChild(badge);
+
+        Array.from(departmentSelect.options).forEach(opt => {
+            if (opt.value === dept.value) {
+                opt.style.backgroundColor = '#198754';
+                opt.style.color = '#ffffff';
+            }
+        });
+
+    });
+
+    document.getElementById('department_ids').value =
+        selectedDepartments.map(d => d.value).join(',');
+}
+
+departmentSelect.addEventListener('change', function() {
+
+    const value = departmentSelect.value;
+    const text = departmentSelect.selectedOptions[0].text;
+
+    if (value && !selectedDepartments.some(d => d.value === value)) {
+        selectedDepartments.push({ value, text });
+        renderDepartmentBadges();
+    }
+
+    departmentSelect.value = '';
+});
+
+initializeDepartments();
 </script>
 @endsection

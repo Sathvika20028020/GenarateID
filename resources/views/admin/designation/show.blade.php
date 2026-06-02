@@ -54,12 +54,12 @@
                         <table class="table table-bordered">
 
                             <tr>
-                                <th>Designation Name</th>
+                                <th style="width: 20%;">Designation Name</th>
                                 <td>{{$designation->name}}</td>
                             </tr>
 
                             <tr>
-                                <th>Status</th>
+                                <th style="width: 20%;">Status</th>
                                 <td>
                                     <span class="badge bg-{{$designation->status ? 'success' : 'danger'}}">{{$designation->status ? 'Active' : 'Inactive'}}</span>
                                 </td>

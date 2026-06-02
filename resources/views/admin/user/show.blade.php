@@ -64,6 +64,10 @@
                         <th>Ward</th>
                         <td>{{$user->ward_names}}</td>
                     </tr>
+                    <tr>
+                        <th>Department</th>
+                        <td><span class="badge bg-primary">BWSSB</span></td>
+                    </tr>
                 </tbody>
             </table>
 
