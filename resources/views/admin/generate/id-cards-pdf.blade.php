@@ -21,16 +21,15 @@
         }
 
         .id-card-page {
-            page-break-after: always;
-        }
-
-        .id-card-page:last-child {
-            page-break-after: auto;
+            margin: 0;
+            padding: 0;
+            page-break-inside: avoid;
         }
 
         .id-card {
             margin: 0 auto;
             box-shadow: none;
+            box-sizing: border-box;
         }
 
         @media print {
@@ -49,7 +48,7 @@
 
     <div class="cards-grid">
         @foreach($employees as $employee)
-            <div class="id-card-page">
+            <div class="id-card-page" @if(!$loop->last) style="page-break-after: always;" @endif>
                 @include('admin.generate.partials.id-card', ['employee' => $employee, 'pdfMode' => $pdfMode ?? false])
             </div>
         @endforeach
