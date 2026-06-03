@@ -42,6 +42,7 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{asset('/theme/css/responsive.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
 
     <style>
@@ -90,7 +91,11 @@
         @include('admin.layout.header')
         <div class="page-body-wrapper">
             @include('admin.layout.sidebar')
+            
             <div class="page-body">
+                <button type="button" class="btn btn-primary mt-3 mb-0" onclick="window.history.back();">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back
+                </button>
                 @if(session('error'))
                     <div class="container-fluid pt-3">
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">

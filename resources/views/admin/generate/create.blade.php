@@ -72,9 +72,42 @@
         .underline-text:hover {
             text-decoration: underline;
         }
+
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .page-loader.active {
+            display: flex;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4c6fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 @endsection
 @section('content')
+
+
     <div class="container-fluid">
         <div class="page-title">
             <div class="row">
@@ -246,6 +279,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader"></div>
+    </div>
 @endsection
 
 @section('script')
@@ -306,6 +344,9 @@
         }
 
         form.classList.add('was-validated');
+
+        // Show page loader before submit
+        document.getElementById('pageLoader').classList.add('active');
 
         // Success alert if you want before submit
         // event.preventDefault();

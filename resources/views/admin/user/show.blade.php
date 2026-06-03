@@ -111,6 +111,10 @@
                         <th>Updated At</th>
                         <td>{{ $user->updated_at ? $user->updated_at->format('d/m/Y h:i A') : '-' }}</td>
                     </tr>
+                    <tr>
+                        <th>Department</th>
+                        <td><span class="badge bg-primary">BWSSB</span></td>
+                    </tr>
                 </tbody>
             </table>
 
