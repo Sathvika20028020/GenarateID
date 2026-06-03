@@ -5,7 +5,9 @@
                 <img class="img-fluid for-light" src="{{asset('/theme/images/logoicon2.png') }}" alt="" style="border-radius: 56%;">
                 <img class="img-fluid for-dark" src="{{asset('/theme/images/logoicon2.png') }}" alt="" style="border-radius: 56%;">
             </a>
-            <h5 class="mb-0 ms-1 fw-bold fs-6 ">Genarate ID - Admin</h5>
+            <h5 class="mb-0 ms-1 fw-bold fs-6 ">
+                Genarate ID - {{ auth()->user()?->isAdmin() ? 'Admin' : 'User' }}
+            </h5>
             <div class="back-btn ms-3">
                 <i class="fa fa-angle-left"></i>
             </div>

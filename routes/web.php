@@ -16,11 +16,12 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'active.user']], function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::get('/bulkdownload', [EmployeeController::class, 'bulkDownloadPage'])->name('bulkdownload');
     Route::get('/generate-id/bulk-download', [EmployeeController::class, 'bulkDownload'])->name('generate-id.bulk-download');
     Route::get('/generate-id/{generateId}/download', [EmployeeController::class, 'download'])->name('generate-id.download');
+    Route::patch('generate-id/{generateId}/toggle-status', [EmployeeController::class, 'toggleStatus'])->name('generate-id.toggle-status');
     Route::resource('generate-id', EmployeeController::class);
 
     Route::group(['middleware' => ['admin']], function () {

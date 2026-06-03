@@ -111,9 +111,9 @@
                     <!-- Employee ID -->
                     <div class="col-md-6">
                         <label class="form-label">Employee ID</label>
-                        <input type="text" class="form-control" name="emp_id" value="{{$generateId->emp_id}}" required>
+                        <input type="text" class="form-control" name="emp_id" value="{{$generateId->emp_id}}" pattern="[A-Za-z0-9]+" oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '')" required>
                         <div class="invalid-feedback">
-                            Please enter Employee ID.
+                            Employee ID should contain only letters and numbers.
                         </div>
                     </div>
                     <!-- Designation -->

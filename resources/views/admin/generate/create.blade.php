@@ -117,9 +117,9 @@
                         <!-- Employee ID -->
                         <div class="col-md-6">
                             <label class="form-label">Employee ID<span class="text-danger">*</span> </label>
-                            <input type="text" name="emp_id" class="form-control" placeholder="Enter employee ID" required>
+                            <input type="text" name="emp_id" class="form-control" placeholder="Enter employee ID" pattern="[A-Za-z0-9]+" oninput="this.value = this.value.replace(/[^A-Za-z0-9]/g, '')" required>
                             <div class="invalid-feedback">
-                                Please enter Employee ID.
+                                Employee ID should contain only letters and numbers.
                             </div>
                         </div>
 

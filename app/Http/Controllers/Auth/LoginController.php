@@ -50,12 +50,8 @@ class LoginController extends Controller
             $request->session()->regenerateToken();
 
             throw ValidationException::withMessages([
-                $this->username() => 'Your account is inactive. Please contact the administrator.',
+                $this->username() => 'Your account is disabled by admin.',
             ]);
-        }
-
-        if ($user->isDepartmentUser()) {
-            return redirect()->route('generate-id.index');
         }
 
         return redirect()->route('dashboard');

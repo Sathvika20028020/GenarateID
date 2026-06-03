@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-      $entries = User::where('role', '!=', User::ROLE_ADMIN)->get();
+      $entries = User::where('role', '!=', User::ROLE_ADMIN)->latest()->get();
         return view('admin.user.index', compact('entries'));
     }
 
@@ -49,7 +49,12 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('admin.user.show', compact('user'));
+        $assignedDepartments = Department::whereIn('id', $user->departmentIds())->get();
+        $assignedWards = Ward::with('zone.corporation')
+            ->whereIn('id', $user->wardIds())
+            ->get();
+
+        return view('admin.user.show', compact('user', 'assignedDepartments', 'assignedWards'));
     }
 
     /**
@@ -122,7 +127,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
-            'phone' => ['required', 'digits:10'],
+            'phone' => ['required', 'digits:10', 'unique:users,phone,' . $userId],
             'password' => [$user ? 'nullable' : 'required', 'string', 'min:6'],
             'ward_ids' => ['nullable', 'string'],
             'department_ids' => ['required', 'string'],

@@ -32,7 +32,7 @@ class EmployeeController extends Controller
     public function create()
     {
       $departments = $this->scopedDepartmentQuery()->where('status', 1)->get();
-      $zones = Zone::where('status', 1)->where('corporation_id', 5)->get();
+      $zones = $this->scopedZoneQuery()->get();
         return view('admin.generate.create', compact('departments','zones'));
     }
 
@@ -42,8 +42,9 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         if($request->ajax()){
-          if($request->list == 'Ward')
-            $list = Ward::where('zone_id', $request->id)->get();
+          if($request->list == 'Ward') {
+            $list = $this->scopedWardQuery((int) $request->id)->get();
+          }
           else if($request->list == 'Designation') {
             abort_unless($this->canUseDepartment((int) $request->id), 403);
             $list = Designation::where('department_id', $request->id)->get();
@@ -51,7 +52,10 @@ class EmployeeController extends Controller
           return response()->json(['success' => true, 'list' => $list]);
         }
         $data = $this->validatedData($request);
-        $data['corporation_id'] = 5;
+        $ward = Ward::findOrFail($data['ward_id']);
+        $data['corporation_id'] = $ward->corporation_id;
+        $data['zone_id'] = $ward->zone_id;
+        $data['created_by'] = auth()->id();
         if($request->image)
           $data['image'] = $this->saveFile($request->image, 'uploads/employees');
         Employee::create($data);
@@ -103,8 +107,15 @@ class EmployeeController extends Controller
       $query = Employee::query();
 
       if (auth()->user()?->isDepartmentUser()) {
+        $query->where('created_by', auth()->id());
+
         $departmentIds = auth()->user()->departmentIds();
         $query->whereIn('department_id', $departmentIds ?: [0]);
+
+        $wardIds = auth()->user()->wardIds();
+        if (!empty($wardIds)) {
+            $query->whereIn('ward_id', $wardIds);
+        }
       }
 
       return $query;
@@ -117,6 +128,38 @@ class EmployeeController extends Controller
       if (auth()->user()?->isDepartmentUser()) {
         $departmentIds = auth()->user()->departmentIds();
         $query->whereIn('id', $departmentIds ?: [0]);
+      }
+
+      return $query;
+    }
+
+    private function scopedZoneQuery()
+    {
+      $query = Zone::where('status', 1);
+      $wardIds = auth()->user()?->wardIds() ?? [];
+
+      if (auth()->user()?->isDepartmentUser() && !empty($wardIds)) {
+        return $query->whereHas('wards', function ($q) use ($wardIds) {
+          $q->whereIn('id', $wardIds)->where('status', 1);
+        });
+      }
+
+      return $query->where('corporation_id', 5);
+    }
+
+    private function scopedWardQuery(?int $zoneId = null)
+    {
+      $query = Ward::where('status', 1);
+      $wardIds = auth()->user()?->wardIds() ?? [];
+
+      if ($zoneId) {
+        $query->where('zone_id', $zoneId);
+      }
+
+      if (auth()->user()?->isDepartmentUser() && !empty($wardIds)) {
+        $query->whereIn('id', $wardIds);
+      } else {
+        $query->where('corporation_id', 5);
       }
 
       return $query;
@@ -204,18 +247,27 @@ class EmployeeController extends Controller
 
     private function authorizeEmployee(Employee $employee): void
     {
-      if (auth()->user()?->isDepartmentUser() && ! $this->canUseDepartment((int) $employee->department_id)) {
-        abort(403);
+      if (auth()->user()?->isDepartmentUser()) {
+        if (!$this->canUseDepartment((int) $employee->department_id)) {
+            abort(403);
+        }
+        $wardIds = auth()->user()->wardIds();
+        if (!empty($wardIds) && !in_array((int) $employee->ward_id, $wardIds, true)) {
+            abort(403);
+        }
       }
     }
 
     private function validatedData(Request $request): array
     {
       $departmentIds = $this->scopedDepartmentQuery()->pluck('id')->all();
+      $zoneIds = $this->scopedZoneQuery()->pluck('id')->all();
+      $wardIds = $this->scopedWardQuery($request->integer('zone_id'))->pluck('id')->all();
+      $user = auth()->user();
 
       return $request->validate([
         'name' => ['required', 'string', 'max:255'],
-        'emp_id' => ['required', 'string', 'max:255'],
+        'emp_id' => ['required', 'alpha_num', 'max:255'],
         'department_id' => ['required', Rule::in($departmentIds)],
         'designation_id' => [
           'required',
@@ -226,8 +278,19 @@ class EmployeeController extends Controller
         'blood_group' => ['required', 'string', 'max:5'],
         'valid_upto' => ['required', 'date'],
         'image' => ['nullable', 'image', 'max:2048'],
-        'zone_id' => ['required', 'exists:zones,id'],
-        'ward_id' => ['required', 'exists:wards,id'],
+        'zone_id' => ['required', Rule::in($zoneIds)],
+        'ward_id' => [
+          'required',
+          Rule::in($wardIds),
+          function ($attribute, $value, $fail) use ($user) {
+              if ($user && $user->isDepartmentUser()) {
+                  $wardIds = $user->wardIds();
+                  if (!empty($wardIds) && !in_array((int)$value, $wardIds, true)) {
+                      $fail('The selected ward is not assigned to you.');
+                  }
+              }
+          }
+        ],
         'status' => ['nullable', 'boolean'],
       ]);
     }
@@ -238,7 +301,7 @@ class EmployeeController extends Controller
     public function show(Employee $generateId)
     {
         $this->authorizeEmployee($generateId);
-        $generateId->load('department', 'designation', 'ward.zone.corporation');
+        $generateId->load('department', 'designation', 'ward.zone.corporation', 'creator');
         return view('admin.generate.show', compact('generateId'));
     }
 
@@ -250,9 +313,10 @@ class EmployeeController extends Controller
       $this->authorizeEmployee($generateId);
       $departments = $this->scopedDepartmentQuery()->where('status', 1)->get();
       $designations = Designation::where('department_id', $generateId->department_id)->get();
-      $zones = Zone::where('status', 1)->where('corporation_id', 5)->get();
-      $wards = Ward::where('zone_id', $generateId->zone_id)->get();
-        return view('admin.generate.edit', compact('generateId','departments','zones','designations','wards'));
+      $zones = $this->scopedZoneQuery()->get();
+      $wards = $this->scopedWardQuery($generateId->zone_id)->get();
+
+      return view('admin.generate.edit', compact('generateId','departments','zones','designations','wards'));
     }
 
     /**
@@ -262,11 +326,31 @@ class EmployeeController extends Controller
     {
         $this->authorizeEmployee($generateId);
         $data = $this->validatedData($request);
+        $ward = Ward::findOrFail($data['ward_id']);
+        $data['corporation_id'] = $ward->corporation_id;
+        $data['zone_id'] = $ward->zone_id;
         if($request->image)
           $data['image'] = $this->saveFile($request->image, 'uploads/employees');
         $generateId->update($data);
         \Session::flash('success', 'Data updated successfully!');
         return redirect()->route('generate-id.index');
+    }
+
+    public function toggleStatus(Request $request, Employee $generateId)
+    {
+        $this->authorizeEmployee($generateId);
+
+        $validated = $request->validate([
+            'status' => ['required', 'boolean'],
+        ]);
+
+        $generateId->update(['status' => (bool) $validated['status']]);
+
+        return response()->json([
+            'success' => true,
+            'status' => $generateId->status,
+            'message' => $generateId->status ? 'Employee activated successfully.' : 'Employee deactivated successfully.',
+        ]);
     }
 
     /**

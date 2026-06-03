@@ -50,19 +50,66 @@
                 <tbody>
                     <tr>
                         <th width="30%">User Name</th>
-                        <td>{{$user->name}}</td>
+                        <td>{{ $user->name ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{{$user->email}}</td>
+                        <td>{{ $user->email ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Phone</th>
-                        <td>{{$user->phone}}</td>
+                        <td>{{ $user->phone ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <th>Ward</th>
-                        <td>{{$user->ward_names}}</td>
+                        <th>Role</th>
+                        <td>{{ $user->isAdmin() ? 'Admin' : 'Department User' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span class="badge bg-{{ $user->status ? 'success' : 'danger' }}">
+                                {{ $user->status ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Departments Assigned</th>
+                        <td>
+                            @forelse($assignedDepartments as $department)
+                                <span class="badge bg-primary me-1 mb-1">{{ $department->name }}</span>
+                            @empty
+                                -
+                            @endforelse
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Wards Assigned</th>
+                        <td>
+                            @forelse($assignedWards as $ward)
+                                <div class="mb-1">
+                                    {{ $ward->name ?? '-' }}
+                                    @if($ward->number)
+                                        - Ward {{ $ward->number }}
+                                    @endif
+                                    @if($ward->zone?->name)
+                                        | Zone: {{ $ward->zone->name }}
+                                    @endif
+                                    @if($ward->zone?->corporation?->name)
+                                        | Corporation: {{ $ward->zone->corporation->name }}
+                                    @endif
+                                </div>
+                            @empty
+                                -
+                            @endforelse
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created At</th>
+                        <td>{{ $user->created_at ? $user->created_at->format('d/m/Y h:i A') : '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Updated At</th>
+                        <td>{{ $user->updated_at ? $user->updated_at->format('d/m/Y h:i A') : '-' }}</td>
                     </tr>
                 </tbody>
             </table>

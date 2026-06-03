@@ -19,6 +19,7 @@ class Employee extends Model
         'corporation_id',
         'zone_id',
         'ward_id',
+        'created_by',
         'status',
     ];
 
@@ -41,5 +42,9 @@ class Employee extends Model
     }
     public function ward(){
       return $this->belongsTo(Ward::class);
+    }
+
+    public function creator(){
+      return $this->belongsTo(User::class, 'created_by');
     }
 }

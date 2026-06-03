@@ -64,27 +64,27 @@
                         </tr>
                         <tr>
                             <th>Name</th>
-                            <td>{{$generateId->name}}</td>
+                            <td>{{ $generateId->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Employee ID</th>
-                            <td>{{$generateId->emp_id}}</td>
+                            <td>{{ $generateId->emp_id ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Designation</th>
-                            <td>{{$generateId->designation?->name}}</td>
+                            <td>{{ $generateId->designation?->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Phone</th>
-                            <td>{{$generateId->phone}}</td>
+                            <td>{{ $generateId->phone ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Address</th>
-                            <td>{{$generateId->address}}</td>
+                            <td>{{ $generateId->address ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Blood Group</th>
-                            <td>{{$generateId->blood_group}}</td>
+                            <td>{{ $generateId->blood_group ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Valid Upto</th>
@@ -92,19 +92,24 @@
                         </tr>
                         <tr>
                             <th>Department</th>
-                            <td>{{$generateId->department?->name}}</td>
+                            <td>{{ $generateId->department?->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Corporation</th>
-                            <td>{{$generateId->ward?->zone?->corporation?->name ?? $generateId->corporation?->name}}</td>
+                            <td>{{ $generateId->ward?->zone?->corporation?->name ?? $generateId->corporation?->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Zone</th>
-                            <td>{{$generateId->ward?->zone?->name ?? $generateId->zone?->name}}</td>
+                            <td>{{ $generateId->ward?->zone?->name ?? $generateId->zone?->name ?? '-' }}</td>
                         </tr>
                         <tr>
                             <th>Ward</th>
-                            <td>{{$generateId->ward?->name}}</td>
+                            <td>
+                                {{ $generateId->ward?->name ?? '-' }}
+                                @if($generateId->ward?->number)
+                                    - Ward {{ $generateId->ward->number }}
+                                @endif
+                            </td>
                         </tr>
                     </tbody>
                 </table>

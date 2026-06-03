@@ -144,7 +144,11 @@
                   </td>
 
                   <td>
-                    @include('admin.partials.status-toggle', ['checked' => $entry->status, 'disabled' => true])
+                    @include('admin.partials.status-toggle', [
+                      'checked' => $entry->status,
+                      'class' => 'js-status-toggle',
+                      'url' => route('generate-id.toggle-status', $entry),
+                    ])
                   </td>
                   <td>
                     <div class="d-flex gap-1">
@@ -180,4 +184,5 @@
         });
     @endif
  </script>
+ @include('admin.partials.status-toggle-script')
 @endsection
