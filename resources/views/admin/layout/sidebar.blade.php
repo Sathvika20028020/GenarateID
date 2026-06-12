@@ -95,6 +95,12 @@
                                     <i class="bi bi-people-fill me-2"></i> Users
                                 </a>
                             </li>
+                            <li>
+                                <a class="sidebar-link {{ request()->routeIs('admin.version.index') ? 'active' : '' }}"
+                                    href="{{ url('version/index') }}">
+                                    <i class="bi bi-people-fill me-2"></i> Version
+                                </a>
+                            </li>
 
                         </ul>
                     </li>
